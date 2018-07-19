@@ -25,6 +25,8 @@
 	</properties>
 
 	<dependencies>
+
+		<!--核心模块，包括自动配置支持、日志和YAML；-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -35,6 +37,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--devtools模块，是为开发者服务的一个模块。主要的功能就是代码修改后一般在5秒之内就会自动重新加载至服务器，相当于restart成功。-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 
 		<!-- mybatis -->
 		<dependency>
@@ -54,9 +64,14 @@
 
 	<build>
 		<plugins>
+			<!--运用SpringBoot 插件  使用spring-boot-devtools模块的应用,当classpath中的文件有改变时，会自动重启！ -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!--下面这个<configuration>不知道有没有必要-->
+				<configuration>
+					<fork>true</fork>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
