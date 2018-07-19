@@ -11,11 +11,55 @@ import java.util.List;
 public class UserServiceImpl  implements UserService{
     @Autowired UserMapper userMapper;
 
+
     @Override
-    public List<User> listAll() {
+    public boolean addUser(User user) {
+        boolean flag=false;
+        try{
+            userMapper.addUser(user);
+            flag=true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
 
+    @Override
+    public boolean updateUser(User user) {
+        boolean flag=false;
+        try{
+            userMapper.updateUser(user);
+            flag=true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
 
-        List<User> users = userMapper.listAll();
-        return users;
+    @Override
+    public boolean deleteUser(int id) {
+        boolean flag=false;
+        try{
+            userMapper.deleteUser(id);
+            flag=true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    @Override
+    public User findUserByEmail(String Email) {
+        return userMapper.findByEmail(Email);
+    }
+
+    @Override
+    public User findUserById(int userId) {
+        return userMapper.findById(userId);
+    }
+
+    @Override
+    public List<User> findAllUser() {
+        return  userMapper.findAllUser();
     }
 }
