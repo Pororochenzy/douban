@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.douban.eggshell.mapper.UserInfoMapper">
+    <insert id="addUserInfo" parameterType="UserInfo"   useGeneratedKeys="true" keyProperty="id"  >
+
+        INSERT INTO user_info(nickname,createtime,user_id) VALUES(#{nickname},#{user.createtime},#{user.id})
+    </insert>
+
+    <select id="findUserById"  resultType="UserInfo">
+        select * from user_info where id=#{id}
+    </select>
+</mapper>

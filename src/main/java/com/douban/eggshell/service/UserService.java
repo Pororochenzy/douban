@@ -6,18 +6,13 @@ import java.util.List;
 
 public interface UserService {
     /**
-     * 新增用户
+     * 用户注册
      * @param user
      * @return
      */
     boolean addUser(User user);
 
-    /**
-     * 修改用户
-     * @param user
-     * @return
-     */
-    boolean updateUser(User user);
+
 
 
     /**
@@ -28,10 +23,11 @@ public interface UserService {
     boolean deleteUser(int id);
 
     /**
-     * 根据用户名字查询用户信息
+     * 用户登录
      * @param Email
      */
-    User findUserByEmail(String Email);
+
+    int findUserByEmail(String email,String password);
 
     /**
      * 根据用户ID查询用户信息

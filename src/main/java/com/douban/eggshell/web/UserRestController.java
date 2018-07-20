@@ -1,6 +1,8 @@
 package com.douban.eggshell.web;
 
 import com.douban.eggshell.pojo.User;
+import com.douban.eggshell.pojo.UserInfo;
+import com.douban.eggshell.service.UserInfoService;
 import com.douban.eggshell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,15 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- *
  * Title: UserRestController
  * Description:
  * 用户数据操作接口
  * Version:1.0.0
- *
  */
 
 /*1.如果只是使用@RestController注解Controller，则Controller中的方法无法返回jsp页面，
@@ -27,48 +28,47 @@ import java.util.List;
 /*3.如果需要返回JSON，XML或自定义mediaType内容到页面，则需要在对应的方法上加上@ResponseBody注解。*/
 
 @RestController
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/api/identity")
 public class UserRestController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserInfoService userInfoService;
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public boolean addUser( User user) {
-        System.out.println(user);
-        System.out.println("开始新增...");
-        return userService.addUser(user);
-    }
+//    @RequestMapping(value ="/login",method = RequestMethod.POST)
+//    public User login(User user){
+//        System.out.println("参数"+user);
+//        boolean flag = userService.findUserByEmail(user.getEmail(), user.getPassword());
+//        if(flag){
+//
+//        }
+//        return user;
+//    }
 
-    @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
-    public boolean updateUser( User user) {
-        System.out.println("开始更新...");
-        return userService.updateUser(user);
-    }
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public UserInfo register(User user, HttpServletRequest request, @RequestParam(value = "nickname") String nickname) {
+        boolean flag = userService.addUser(user);
 
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
-    public boolean delete(@RequestParam(value = "userName", required = true) int userId) {
-        System.out.println("开始删除...");
-        return userService.deleteUser(userId);
-    }
+        if (flag) {
+            int userID = userService.findUserByEmail(user.getEmail(), user.getPassword());
+            user.setId(userID);
+//拿到用户详情表的ID
+            int keyID = userInfoService.addUserInfo(user, nickname);
+            System.out.println("用户详情id值是：" + keyID);
 
-    @RequestMapping(value = "/userEmail", method = RequestMethod.GET)
-    public User findByUserEmail(@RequestParam(value = "userName", required = true) String userName) {
-        System.out.println("开始查询...");
-        return userService.findUserByEmail(userName);
-    }
 
-    @RequestMapping(value = "/userId", method = RequestMethod.GET)
-    public User findByUserId(@RequestParam(value = "userId", required = true) int userId) {
-        System.out.println("开始查询...");
-        return userService.findUserById(userId);
-    }
+            //准备返回查询回的用户信息
+            System.out.println("用户表和用户信息表增加成功");
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> findAllUser() {
-        System.out.println("开始查询...");
-        System.out.println(userService.findAllUser());
+            return userInfoService.findUserInfoById(keyID);
 
-        return userService.findAllUser();
-        //网站页面显示结果：  [{"id":1,"email":"test","password":"123","createtime":"2018-07-19","isdelete":0},{"id":2,"email":"test@qq.com","password":"1234","createtime":null,"isdelete":0}]
+        } else {
+            System.out.println("用户增加失败");
+
+        }
+//        Session.setAttribute("currentuser",);
+
+        return null;
     }
 }
+

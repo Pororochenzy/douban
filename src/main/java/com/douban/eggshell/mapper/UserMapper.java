@@ -4,6 +4,7 @@ import com.douban.eggshell.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 //@Mapper
 public interface UserMapper {
@@ -24,10 +25,10 @@ public interface UserMapper {
     void deleteUser(int id);
 
     /**
-     * 根据用户名称查询用户信息
+     * 根据邮箱密码 查找到 id
      *
      */
-    User findByEmail(String eeee);
+    int findByEmail(Map map);
 
     /**
      * 根据用户ID查询用户信息

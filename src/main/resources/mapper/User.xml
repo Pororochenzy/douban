@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.douban.eggshell.mapper.UserMapper">
+
     <select id="findAllUser" resultType="User">
         select * from user
     </select>
@@ -12,20 +13,22 @@
         insert into user(email,password,createtime) values (#{email},#{password},#{createtime})
     </insert>
 
-    <update id="Update" parameterType="User" >
-        update user set name=#{password} where id=#{id}
-    </update>
 
     <!--删除用户-->
     <update id="deleteUser" parameterType="int">
         update user set isdelete=1 where id=#{id}
     </update>
 
-    <select id="findByEmail" parameterType="String">
-       SELECT * FROM t_user where email=#{email}
+    <!--通过邮箱密码寻找用户 ，返回id号-->
+    <select id="findByEmail" parameterType="map" resultType="int">
+       SELECT id FROM user where email=#{email} and password=#{password}
     </select>
 
     <select id="findById" parameterType="int">
         select * from user WHERE id=#{id}
     </select>
+
+    <!-- 分隔符-->
+
+
 </mapper>
