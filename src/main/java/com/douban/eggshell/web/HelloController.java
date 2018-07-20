@@ -21,8 +21,7 @@ public class HelloController {
     UserService userService;
     @RequestMapping("/hello")
     public  String hello(){
-        List<User> users = userService.listAll();
-        System.out.println(users);
+
         return "hi ,fuck eggshell";
     }
 }
