@@ -1,5 +1,8 @@
 package com.douban.eggshell.web;
 
+import com.douban.eggshell.dto.Result;
+import com.douban.eggshell.enums.BaseEnums;
+import com.douban.eggshell.enums.UserEnums;
 import com.douban.eggshell.pojo.User;
 import com.douban.eggshell.pojo.UserInfo;
 import com.douban.eggshell.service.UserInfoService;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Title: UserRestController
@@ -46,7 +48,7 @@ public class UserRestController {
 //    }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public UserInfo register(User user, HttpServletRequest request, @RequestParam(value = "nickname") String nickname) {
+    public Result register(User user, HttpServletRequest request, @RequestParam(value = "nickname") String nickname) {
         boolean flag = userService.addUser(user);
 
         if (flag) {
@@ -60,8 +62,9 @@ public class UserRestController {
             //准备返回查询回的用户信息
             System.out.println("用户表和用户信息表增加成功");
 
-            return userInfoService.findUserInfoById(keyID);
 
+//            return  Result.build(1,userInfoService.findUserInfoById(keyID),"hello");
+            return Result.build(UserEnums.EMAIL_REGISTER_SUCCESS, userInfoService.findUserInfoById(keyID));
         } else {
             System.out.println("用户增加失败");
 

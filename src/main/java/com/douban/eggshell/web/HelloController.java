@@ -17,10 +17,11 @@ import java.util.List;
 
 @RestController
 public class HelloController {
-@Autowired
+    @Autowired
     UserService userService;
+
     @RequestMapping("/hello")
-    public  String hello(){
+    public String hello() {
 
         return "hi ,fuck eggshell";
     }

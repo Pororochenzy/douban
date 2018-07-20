@@ -1,11 +1,11 @@
 package com.douban.eggshell.pojo;
 
 public class UserInfo {
-    private int id;
+    private Integer id;
     private String nickname;
     private String introduction;
-    private int sex ;
-    private String imgurl ;
+    private Integer sex;
+    private String imgurl;
     private String createtime;
     private User user;
 
@@ -17,13 +17,13 @@ public class UserInfo {
         this.user = user;
     }
 
-    private  int role;
+    private int role;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -43,11 +43,11 @@ public class UserInfo {
         this.introduction = introduction;
     }
 
-    public int getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 

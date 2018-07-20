@@ -1,11 +1,12 @@
 package com.douban.eggshell.pojo;
 
+//@Data
 public class User {
-    private int id ;
+    private Integer id;
     private String email;
     private String password;
     private String createtime;
-    private  int isdelete  ;
+    private Integer isdelete;
 
     @Override
     public String toString() {
@@ -18,11 +19,11 @@ public class User {
                 '}';
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -50,11 +51,11 @@ public class User {
         this.createtime = createtime;
     }
 
-    public int getIsdelete() {
+    public Integer getIsdelete() {
         return isdelete;
     }
 
-    public void setIsdelete(int isdelete) {
+    public void setIsdelete(Integer isdelete) {
         this.isdelete = isdelete;
     }
 }
