@@ -1,16 +1,13 @@
-package com.douban.eggshell.pojo;
+package com.douban.eggshell.vo;
 
 import lombok.Data;
 
 @Data
-public class UserInfo {
-    private Integer id;
+public class UserInfoVO {
+    private String email;
     private String nickname;
     private String introduction;
-    private Integer sex;
+    private int sex;
     private String imgurl;
     private String createtime;
-    private User user;
-
-
 }

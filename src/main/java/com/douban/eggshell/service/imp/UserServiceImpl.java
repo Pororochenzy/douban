@@ -3,11 +3,10 @@ package com.douban.eggshell.service.imp;
 import com.douban.eggshell.mapper.UserMapper;
 import com.douban.eggshell.pojo.User;
 import com.douban.eggshell.service.UserService;
-import com.sun.javafx.binding.StringFormatter;
+import com.douban.eggshell.util.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,8 +24,7 @@ public class UserServiceImpl implements UserService {
 
         boolean flag = false;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        String createtime = sdf.format(new Date());
+        String createtime = DataUtil.dataToString(new Date());
 
         user.setCreatetime(createtime);
 
@@ -54,16 +52,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int findUserByEmail(String email, String password) {
+    public User findByEmailPwd(String email, String password) {
         Map<String, String> map = new HashMap<>();
         map.put("email", email);
         map.put("password", password);
-        int id = userMapper.findByEmail(map);
-        if (id > 0) {
-            return id;
+        User user = userMapper.findByEmailPwd(map);
+        if (user!=null) {
+            return user;
         }
 
-        return 0;
+        return null;
     }
 
     @Override
@@ -74,5 +72,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUser() {
         return userMapper.findAllUser();
+    }
+
+    @Override
+    public boolean checkByEmail(String email) {
+        User user = userMapper.findByEmail(email);
+        if(user!=null){
+            return  true;
+        }
+        return  false;
+    }
+
+    @Override
+    public boolean login(User user) {
+        User u = userMapper.login(user);
+
+        if(u!=null){
+            return true;
+        }
+        return  false;
     }
 }

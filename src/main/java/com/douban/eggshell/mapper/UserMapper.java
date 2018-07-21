@@ -28,7 +28,7 @@ public interface UserMapper {
      * 根据邮箱密码 查找到 id
      *
      */
-    int findByEmail(Map map);
+    User findByEmailPwd(Map map);
 
     /**
      * 根据用户ID查询用户信息
@@ -42,6 +42,13 @@ public interface UserMapper {
      */
     List<User>  findAllUser();
 
+    /**
+     * 通过email 查找用户
+     */
+    User findByEmail(String email);
 
-
+    /**
+     * 登录
+     */
+    User login(User user);
 }

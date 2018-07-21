@@ -4,6 +4,7 @@ import com.douban.eggshell.mapper.UserInfoMapper;
 import com.douban.eggshell.pojo.User;
 import com.douban.eggshell.pojo.UserInfo;
 import com.douban.eggshell.service.UserInfoService;
+import com.douban.eggshell.vo.UserInfoUpdateVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,20 @@ public class UserInfoServiceImpl implements UserInfoService {
             return userInfo;
         }
         return null;
+    }
+
+    @Override
+    public UserInfo findByUser(User user) {
+        return  userInfoMapper.findByUser(user);
+
+    }
+
+    @Override
+    public boolean updateUserInfo(UserInfoUpdateVo updateVo) {
+        int i = userInfoMapper.updateUserInfo(updateVo);
+        if(i>0){
+            return  true;
+        }
+        return false;
     }
 }
