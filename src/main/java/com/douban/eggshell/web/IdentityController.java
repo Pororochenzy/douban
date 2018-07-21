@@ -47,6 +47,13 @@ public class IdentityController {
     @Autowired
     private UserInfoService userInfoService;
 
+    /**
+     * 用户登录
+     * @param email
+     * @param pwd
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "email") String email, @RequestParam(value = "password") String pwd, HttpServletRequest request) {
         //1.先检查账号是否存在，2检查账号密码
@@ -72,6 +79,13 @@ public class IdentityController {
 
     }
 
+    /**
+     * 用户注册
+     * @param user
+     * @param request
+     * @param nickname
+     * @return
+     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result register(User user, HttpServletRequest request, @RequestParam(value = "nickname") String nickname) {
         boolean flag = userService.addUser(user);
@@ -97,6 +111,11 @@ public class IdentityController {
         }
     }
 
+    /**
+     * 检查邮箱
+     * @param email
+     * @return
+     */
     @RequestMapping(value = "/checkEmail")
     public Result checkEmail(@RequestParam(value = "email") String email) {
         boolean flag;
@@ -116,8 +135,10 @@ public class IdentityController {
     }
 
     /**
-     * 从session拿出 user对象,返回指定用户详情信息
-     * Get
+     * 获得用户的详情
+     *
+     * @param request
+     * @return
      */
     @RequestMapping(value = "/people", method = RequestMethod.GET)
     public Result people_get(HttpServletRequest request) {
@@ -140,6 +161,13 @@ public class IdentityController {
 
     }
 
+    /**
+     * 用户详情 修改
+     * @param updateVo
+     * @param request
+     * @param avater
+     * @return
+     */
     @RequestMapping(value = "/people", method = RequestMethod.POST)
     public Result people_post(UserInfoUpdateVo updateVo, HttpServletRequest request, @RequestParam(value = "avater", required = false) MultipartFile avater) {
         HttpSession session = request.getSession();
@@ -160,6 +188,7 @@ public class IdentityController {
                 try {
                     avater.transferTo(destFile);
                     //将图片在服务器的保存位置 赋给vo , 之后存入数据库
+
                     updateVo.setImgurl(destFileName);
                 } catch (IOException e) {
                     return Result.build("修改头像失败");
@@ -180,6 +209,11 @@ public class IdentityController {
         return Result.build(UserEnums.USER_NOT_LOGIN);
     }
 
+    /**
+     * 退出登录
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "logout")
     public Result logout(HttpServletRequest request) {
         request.getSession().removeAttribute("currentuser");
