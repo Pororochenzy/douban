@@ -88,6 +88,11 @@ public class IdentityController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result register(User user, HttpServletRequest request, @RequestParam(value = "nickname") String nickname) {
+        //验证一次该邮箱是否已经注册
+//        boolean access  = userService.checkByEmail(user.getEmail());
+//        if(!access){
+//            return  Result.build(UserEnums.EMAIL_IS_REGISTER);
+//        }
         boolean flag = userService.addUser(user);
 
         if (flag) {
@@ -183,13 +188,27 @@ public class IdentityController {
                 //通过req.getServletContext().getRealPath("") 获取当前项目的真实路径，然后拼接前面的文件名
                 String destFileName = request.getServletContext().getRealPath("") + "uploaded" + File.separator + fileName;
                 //第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录
+
+
                 File destFile = new File(destFileName);
                 destFile.getParentFile().mkdirs();
                 try {
                     avater.transferTo(destFile);
                     //将图片在服务器的保存位置 赋给vo , 之后存入数据库
 
-                    updateVo.setImgurl(destFileName);
+                    //返回一个相对路径的头像地址给前端
+                    int index = destFileName.indexOf("uploaded");
+                   String relPathName= destFileName.substring(index-1);
+                    updateVo.setImgurl(relPathName);
+
+//                    log.info("图片的存放路径是{}",destFileName);
+//                    log.info("对象imgurl属性{}",updateVo.getImgurl());
+//                    log.info("对象介绍属性{}",updateVo.getIntroduction());
+//                    log.info("对象id属性{}",updateVo.getId());
+//                    log.info("对象昵称属性{}",updateVo.getNickname());
+//                    log.info("对象密码属性{}",updateVo.getPassword());
+
+
                 } catch (IOException e) {
                     return Result.build("修改头像失败");
                 }

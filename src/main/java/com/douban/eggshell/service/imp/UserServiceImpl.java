@@ -3,7 +3,7 @@ package com.douban.eggshell.service.imp;
 import com.douban.eggshell.mapper.UserMapper;
 import com.douban.eggshell.pojo.User;
 import com.douban.eggshell.service.UserService;
-import com.douban.eggshell.util.DataUtil;
+import com.douban.eggshell.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
         boolean flag = false;
 
-        String createtime = DataUtil.dataToString(new Date());
+        String createtime = DateUtil.dataToString(new Date());
 
         user.setCreatetime(createtime);
 
