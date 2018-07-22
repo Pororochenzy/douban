@@ -3,12 +3,47 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.douban.eggshell.mapper.UserInfoMapper">
+    <!--新增一条用户详情-->
     <insert id="addUserInfo" parameterType="UserInfo"   useGeneratedKeys="true" keyProperty="id"  >
 
         INSERT INTO user_info(nickname,createtime,user_id) VALUES(#{nickname},#{user.createtime},#{user.id})
     </insert>
 
+    <!--通过id查找用户信息-->
     <select id="findUserById"  resultType="UserInfo">
         select * from user_info where id=#{id}
     </select>
+
+    <!--给我一个user 还你一个userinfo-->
+    <select id="findByUser" parameterType="User" resultMap="UserInfoMap">
+      select *,u.id u_id from user u  INNER JOIN user_info  ui on u.id=ui.user_id where u.id=#{id}
+    </select>
+
+    <resultMap id="UserInfoMap" type="UserInfo">
+        <id column="id" property="id"></id>
+        <result property="nickname" column="nickname"></result>
+        <result property="introduction" column="introduction"></result>
+        <result property="sex" column="sex"></result>
+        <result property="imgurl" column="imgurl"></result>
+        <result property="createtime" column="createtime"></result>
+        <collection property="user" ofType="User">
+            <id column="u_id" property="id"></id>
+            <result column="email" property="email"></result>
+            <result  column="password" property="password"></result>
+        </collection>
+
+    </resultMap>
+
+  <!--用户详情修改-->
+    <update id="updateUserInfo" parameterType="com.douban.eggshell.vo.UserInfoUpdateVo">
+        update  user u  INNER JOIN  user_info ui  on  ui.user_id =u.id
+        <set>
+            <if test="nickname != null"> ui.nickname=#{nickname},</if>
+            <if test="password != null">ui.password=#{password}</if>
+            <if test="sex != null">ui.sex=#{sex}</if>
+            <if test="introduction != null">ui.introduction=#{introduction}</if>
+            <if test="imgurl != null">ui.imgurl=#{imgurl}</if>
+        </set>
+        where u.id=#{id}
+    </update>
 </mapper>
