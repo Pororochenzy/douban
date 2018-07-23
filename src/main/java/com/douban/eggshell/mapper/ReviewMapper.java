@@ -3,6 +3,7 @@ package com.douban.eggshell.mapper;
 import com.douban.eggshell.pojo.Film_review;
 import com.douban.eggshell.pojo.Score;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ReviewMapper {
@@ -23,4 +24,5 @@ public interface ReviewMapper {
     int findOppNum(int film_review_id);
 
     Film_review findReviewByid(int film_review_id);
+    List<Film_review> listReview(Map map) ;
 }

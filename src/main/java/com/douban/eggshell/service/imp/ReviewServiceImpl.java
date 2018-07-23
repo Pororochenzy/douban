@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -82,5 +83,16 @@ public class ReviewServiceImpl implements ReviewService {
             return  true;
         }
         return  false;
+    }
+
+    @Override
+    public List<Film_review> listReviewByWelcomeOrTime(String type) {
+        Map<String,Object> typemap = new HashMap<>();
+        if(type.equals("welcome")){
+            typemap.put("welcome",1);
+        }
+       return  reviewMapper.listReview(typemap);
+
+
     }
 }
