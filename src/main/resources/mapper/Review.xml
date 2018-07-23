@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.douban.eggshell.mapper.ReviewMapper">
+    <!--联合3个表,找到单条影评(一定要让用户评了分才发能发影评)-->
+    <select id="findReviewById" resultMap="reviewMap">
+      SELECT *,m.id as m_id,ui.id as ui_id from film_review fr
+      INNER JOIN movie m  on fr.movie_id=m.id
+       INNER JOIN user_info ui on fr.user_info_id=ui.id
+       INNER JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
+        where  fr.isdelete =0 and fr.id=#{id}
+    </select>
+
+    <resultMap id="reviewMap" type="Film_review">
+        <id column="id" property="id"/>
+        <result property="title" column="title"/>
+        <result property="comment" column="comment"/>
+        <result property="support" column="support"/>
+        <result property="oppose" column="oppose"/>
+        <result property="createtime" column="createtime"/>
+      <association property="movie" javaType="Movie">
+            <id property="id" column="m_id" />
+          <result property="name" column="name"/>
+          <result property="imgurl" column="imgurl"/>
+          <result property="director" column="director"/>
+          <result property="scriptwriter" column=""/><!---->
+          <result property="actor" column="actor"/>
+          <result property="style" column="style"/>
+          <result property="area" column="area"/>
+          <result property="language" column=""/><!---->
+          <result property="release_date" column="release_date"/>
+          <result property="running_time" column=""/><!---->
+          <result property="alias" column=""/><!---->
+          <result property="introduction" column=""/><!---->
+          <result property="grade" column=""/><!---->
+          <result property="comment_num" column=""/><!---->
+          <result property="createtime" column=""/><!---->
+      </association>
+        <association property="userInfo" javaType="UserInfo">
+            <id property="id" column="ui_id"/>
+            <result property="nickname" column="nickname"/>
+            <result property="imgurl" column="imgurl"/>
+        </association>
+
+        <association property="score" javaType="Score">
+            <result property="star" column="star"/>
+        </association>
+    </resultMap>
+
+    <!--添加一个影评-->
+    <insert id="addReview" parameterType="map">
+INSERT INTO film_review(title,comment,user_info_id,movie_id,createtime) VALUES(#{title},#{comment},#{userinfo_id},#{movie_id},#{createtime})
+    </insert>
+
+    <!--判断影评id是否存在-->
+    <select id="findReviewByid" resultType="Film_review">
+        select *  from film_review where id = #{id}
+    </select>
+
+    <!--用户给一部电影评分-->
+    <insert id="addMovieScore" parameterType="map">
+        INSERT into score(star,user_info_id,movie_id) VALUES(#{star},#{user_info},#{movie_id})
+    </insert>
+
+    <!--判断用户对这部电影有无评分-->
+    <select id="findMovieScoreByUserAndMovie_id" parameterType="map" resultType="Score">
+        SELECT * from score where user_info_id=#{ui_id} and movie_id=#{m_id}
+    </select>
+
+    <!--点赞-->
+    <update id="addSupport" parameterType="int">
+      update film_review set support=support+1 where id =#{id}
+    </update>
+
+    <!--反对-->
+    <update id="addOppose" parameterType="int">
+        update film_review set oppose=oppose+1 where id =#{id}
+    </update>
+
+    <!--得到点赞数-->
+    <select id="findSupNum" resultType="int">
+        select support from  film_review where id =#{id}
+    </select>
+    <!--得到反对数-->
+    <select id="findOppNum" resultType="int">
+        select oppose from  film_review where id =#{id}
+    </select>
+
+
+    <!--最受欢迎的影评们-->
+    <!--<select id="listReview" resultMap="listReviewMap">-->
+    <!--SELECT *,m.id as m_id,ui.id as ui_id from film_review fr-->
+      <!--INNER JOIN movie m  on fr.movie_id=m.id-->
+       <!--INNER JOIN user_info ui on fr.user_info_id=ui.id-->
+       <!--INNER JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id-->
+        <!--where  fr.isdelete =0-->
+    <!--</select>-->
+
+    <!--<resultMap id="listReviewMap" type="">-->
+
+    <!--</resultMap>-->
+
+
+
+
+
+
+    <!--最新的影评们-->
+</mapper>

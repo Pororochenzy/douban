@@ -22,7 +22,22 @@ public enum UserEnums implements BaseEnums {
     USER_NOT_LOGIN(-2, "未登录"),
 
     USER_LOGOUT_SUCCESS(1, "退出成功"),
-    USER_LOGOUT_ERROR(-1, "退出失败");
+    USER_LOGOUT_ERROR(-1, "退出失败"),
+
+    REVIEW_NOT_EXIST(-1,"影评不存在"),
+    REVIEW_ADD_ERROR(-2,"影评增加失败"),
+    REVIEW_ADD_SUCCESS(1,"影评增加成功"),
+
+    USER_ALEADLY_SCORE(1,"已经打过分了"),
+    USER_NO_SCORE(-1,"未打过分"),
+
+    SUPPORT_SUCCESS(1,"点赞成功"),
+
+    OPPOSE_SUCCESS(1,"反对成功"),
+
+    SUP_OPP_ERROR(-2,"赞成或反对操作失败");
+
+
 
     Integer code;
     String msg;

@@ -39,9 +39,9 @@
         update  user u  INNER JOIN  user_info ui  on  ui.user_id =u.id
         <set>
             <if test="nickname != null"> ui.nickname=#{nickname},</if>
-            <if test="password != null">ui.password=#{password}</if>
-            <if test="sex != null">ui.sex=#{sex}</if>
-            <if test="introduction != null">ui.introduction=#{introduction}</if>
+            <if test="password != null">ui.password=#{password},</if>
+            <if test="sex != null">ui.sex=#{sex},</if>
+            <if test="introduction != null">ui.introduction=#{introduction},</if>
             <if test="imgurl != null">ui.imgurl=#{imgurl}</if>
         </set>
         where u.id=#{id}
