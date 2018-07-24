@@ -30,4 +30,9 @@ public class MovieServiceImplTest {
         List<MovieRankingVO> list =  movieService.rankingDefault(10);
         list.forEach(System.out::println);
     }
+
+    @Test
+    public void findMovieById() {
+        System.out.println(movieService.findMovieById(1));
+    }
 }

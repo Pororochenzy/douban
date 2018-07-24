@@ -30,4 +30,20 @@ public class MovieServiceImpl implements MovieService {
         }
         return null;
     }
+
+    @Override
+    public Movie findMovieById(int id) {
+        if (id > 0) {
+            return movieMapper.findMovieById(id);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addMovie(Movie movie) {
+        if (movie != null) {
+            return movieMapper.addMovie(movie) > 0;
+        }
+        return false;
+    }
 }

@@ -22,5 +22,9 @@ public interface MovieMapper {
      */
     int addMovie(Movie movie);
 
+    /**
+     * 通过id查找电影
+     */
+    Movie findMovieById(int id);
 
 }
