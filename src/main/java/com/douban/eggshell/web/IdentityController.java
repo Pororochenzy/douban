@@ -172,6 +172,7 @@ public class IdentityController {
      * @param request
      * @param avater
      * @return
+     * 服务器 图片的存放绝对路径是@C: Users//chen//AppData//Local//Temp//tomcat-docbase.4918370418639826426.80//uploaded//1532445687781屏幕截图(3).png
      */
     @RequestMapping(value = "/people", method = RequestMethod.POST)
     public Result people_post(UserInfoUpdateVo updateVo, HttpServletRequest request, @RequestParam(value = "avater", required = false) MultipartFile avater) {
@@ -201,13 +202,14 @@ public class IdentityController {
                    String relPathName= destFileName.substring(index-1);
                     updateVo.setImgurl(relPathName);
 
+                    log.info("服务器 图片的存放绝对路径是{}",destFile);
 //                    log.info("图片的存放路径是{}",destFileName);
 //                    log.info("对象imgurl属性{}",updateVo.getImgurl());
 //                    log.info("对象介绍属性{}",updateVo.getIntroduction());
 //                    log.info("对象id属性{}",updateVo.getId());
 //                    log.info("对象昵称属性{}",updateVo.getNickname());
 //                    log.info("对象密码属性{}",updateVo.getPassword());
-                    log.info("对象性别属性{}",updateVo.getSex());
+//                    log.info("对象性别属性{}",updateVo.getSex());
 
 
                 } catch (IOException e) {

@@ -12,11 +12,14 @@ import com.douban.eggshell.util.SessionUtil;
 import com.douban.eggshell.vo.ReviewPageVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+@Slf4j
 
 @RestController
 @RequestMapping(value = "/api/review")
@@ -34,8 +37,7 @@ public class ReviewController {
      */
     @RequestMapping(value = "/{film_review_id}", method = RequestMethod.GET)
     public Result review(@PathVariable("film_review_id") int reciew_id) {
-
-        //还有一个respond_num 没写
+//        log.info("传入的值是:{}",reciew_id);
 
         Film_review review = reviewService.findReviewByid(reciew_id);
         if (review != null) {
@@ -111,11 +113,15 @@ public class ReviewController {
      */
     @RequestMapping(value = "/support", method = RequestMethod.PUT)
     public Result support(@RequestParam(value = "film_review_id") int film_review_id, HttpServletRequest request) {
+        log.info("传入的值参数是：{}", film_review_id);
+        //登录才能点赞, SessionUtil.isLogin（）用户登录了后返回true,未登录返回false
 
-//         登录才能点赞
-        if (!SessionUtil.isLogin(request)) {
+        if (SessionUtil.isLogin(request) == false) {
             return Result.build((UserEnums.USER_NOT_LOGIN));
         }
+
+        //log.info("赞同，登录状态bollean值:,{}",SessionUtil.isLogin(request)); // 登录了 返回false
+
 //        检查传入的电影id是否存在
         if (!reviewService.checkReviewByid(film_review_id)) {
             return Result.build(UserEnums.REVIEW_NOT_EXIST);
@@ -128,6 +134,7 @@ public class ReviewController {
         }
         return Result.build(UserEnums.SUP_OPP_ERROR);
 
+
     }
 
     /**
@@ -139,9 +146,12 @@ public class ReviewController {
      */
     @RequestMapping(value = "/oppose", method = RequestMethod.PUT)
     public Result oppose(@RequestParam(value = "film_review_id") int film_review_id, HttpServletRequest request) {
+
         if (!SessionUtil.isLogin(request)) {
             return Result.build((UserEnums.USER_NOT_LOGIN));
         }
+        log.info("反对，登录状态bollean值:,{}", SessionUtil.isLogin(request)); // 登录了 返回false
+
 //        检查传入的电影id是否存在
         if (!reviewService.checkReviewByid(film_review_id)) {
             return Result.build(UserEnums.REVIEW_NOT_EXIST);
@@ -152,16 +162,19 @@ public class ReviewController {
             return Result.build(UserEnums.OPPOSE_SUCCESS, OpposeNum);
         }
         return Result.build(UserEnums.SUP_OPP_ERROR);
+
+
     }
 
     /**
      * 最受欢迎的影评
+     *
      * @param start
      * @param size
      * @return
      */
     @RequestMapping(value = "/best", method = RequestMethod.GET)
-    public Result review_best(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
+    public Result review_best(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "2") int size) {
         //2. 根据start,size进行分页，并且可以设置id 倒排序PageHelper.startPage(start,size,"id asc");
         PageHelper.startPage(start, size);
 
@@ -181,20 +194,24 @@ public class ReviewController {
             br.setCur_page(cur_page);
             br.setSum(sum);
             br.setTotal_page(total_page);
-            br.setReviews(bestReviews);
+            br.setList(bestReviews);
             return Result.build(UserEnums.USERINFO_GET_SUCCESS, br);
         }
         return Result.build(UserEnums.REVIEWLIST_GET_ERROR);
     }
 
     /**
-     *最新发表的影评
+     * 最新发表的影评
+     *
      * @param start
      * @param size
      * @return
      */
     @RequestMapping(value = "/latest", method = RequestMethod.GET)
     public Result review_latest(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
+        //2. 根据start,size进行分页，并且可以设置id 倒排序PageHelper.startPage(start,size,"id asc");
+        PageHelper.startPage(start, size);
+
         List<Film_review> lateReviews = reviewService.listReviewByWelcomeOrTime("latest");
 
         ReviewPageVO pageVO = PageVoUtil.getVoByResults(lateReviews);

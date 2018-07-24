@@ -24,7 +24,7 @@ public class PageVoUtil {
         br.setCur_page(cur_page);
         br.setSum(sum);
         br.setTotal_page(total_page);
-        br.setReviews(Results);
+        br.setList(Results);
 
         return br;
     }

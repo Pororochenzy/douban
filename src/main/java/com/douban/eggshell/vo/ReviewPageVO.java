@@ -15,5 +15,5 @@ public class ReviewPageVO<T> {
     private int cur_page;//当前页数
     private int total_page;//总页数
     private Long sum;//总影评数量
-    private List<T> reviews;
+    private List<T> list;
 }
