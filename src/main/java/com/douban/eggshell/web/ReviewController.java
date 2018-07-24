@@ -5,15 +5,18 @@ import com.douban.eggshell.enums.UserEnums;
 import com.douban.eggshell.pojo.Film_review;
 import com.douban.eggshell.pojo.Score;
 import com.douban.eggshell.pojo.User;
-import com.douban.eggshell.pojo.UserInfo;
 import com.douban.eggshell.service.ReviewService;
 import com.douban.eggshell.service.UserInfoService;
+import com.douban.eggshell.util.PageVoUtil;
 import com.douban.eggshell.util.SessionUtil;
+import com.douban.eggshell.vo.ReviewPageVO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/review")
@@ -101,6 +104,7 @@ public class ReviewController {
 
     /**
      * 给影评点赞
+     *
      * @param film_review_id
      * @param request
      * @return
@@ -128,6 +132,7 @@ public class ReviewController {
 
     /**
      * 给影评反对
+     *
      * @param film_review_id
      * @param request
      * @return
@@ -149,8 +154,54 @@ public class ReviewController {
         return Result.build(UserEnums.SUP_OPP_ERROR);
     }
 
-//    @RequestMapping(value = "/best",method =RequestMethod.GET)
-//    public  Result review_best(@RequestParam(value = "page") int page){
-//
-//    }
+    /**
+     * 最受欢迎的影评
+     * @param start
+     * @param size
+     * @return
+     */
+    @RequestMapping(value = "/best", method = RequestMethod.GET)
+    public Result review_best(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
+        //2. 根据start,size进行分页，并且可以设置id 倒排序PageHelper.startPage(start,size,"id asc");
+        PageHelper.startPage(start, size);
+
+        //3. 因为PageHelper的作用，这里就会返回当前分页的集合了
+        //因为这个 PageHelper工具类会帮我们在XML的id=“XXXX”的那SQl里的 自动为我们拼接limit() 做那些工作
+        List<Film_review> bestReviews = reviewService.listReviewByWelcomeOrTime("welcome");
+
+
+        //4. 根据返回的集合List，创建PageInfo对象
+        PageInfo<Film_review> film_reviewPageInfo = new PageInfo<>(bestReviews);
+        int cur_page = film_reviewPageInfo.getPageNum();//当前页数
+        int total_page = film_reviewPageInfo.getPages(); //总页数
+        long sum = film_reviewPageInfo.getTotal();//总影评数量
+        if (bestReviews != null) {
+            //包装进VO类 ，返回给前台
+            ReviewPageVO br = new ReviewPageVO<>(); //它会自动帮你判定传入的泛型
+            br.setCur_page(cur_page);
+            br.setSum(sum);
+            br.setTotal_page(total_page);
+            br.setReviews(bestReviews);
+            return Result.build(UserEnums.USERINFO_GET_SUCCESS, br);
+        }
+        return Result.build(UserEnums.REVIEWLIST_GET_ERROR);
+    }
+
+    /**
+     *最新发表的影评
+     * @param start
+     * @param size
+     * @return
+     */
+    @RequestMapping(value = "/latest", method = RequestMethod.GET)
+    public Result review_latest(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
+        List<Film_review> lateReviews = reviewService.listReviewByWelcomeOrTime("latest");
+
+        ReviewPageVO pageVO = PageVoUtil.getVoByResults(lateReviews);
+
+        if (lateReviews != null) {
+            return Result.build(UserEnums.USERINFO_GET_SUCCESS, pageVO);
+        }
+        return Result.build(UserEnums.REVIEWLIST_GET_ERROR);
+    }
 }

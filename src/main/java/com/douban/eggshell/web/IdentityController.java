@@ -207,6 +207,7 @@ public class IdentityController {
 //                    log.info("对象id属性{}",updateVo.getId());
 //                    log.info("对象昵称属性{}",updateVo.getNickname());
 //                    log.info("对象密码属性{}",updateVo.getPassword());
+                    log.info("对象性别属性{}",updateVo.getSex());
 
 
                 } catch (IOException e) {

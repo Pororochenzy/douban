@@ -35,7 +35,9 @@ public enum UserEnums implements BaseEnums {
 
     OPPOSE_SUCCESS(1,"反对成功"),
 
-    SUP_OPP_ERROR(-2,"赞成或反对操作失败");
+    SUP_OPP_ERROR(-2,"赞成或反对操作失败"),
+
+    REVIEWLIST_GET_ERROR(-1,"获取失败");
 
 
 

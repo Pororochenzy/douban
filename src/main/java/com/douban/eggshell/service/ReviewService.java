@@ -3,8 +3,7 @@ package com.douban.eggshell.service;
 import com.douban.eggshell.pojo.Film_review;
 import com.douban.eggshell.pojo.Score;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 
 public interface ReviewService {
@@ -23,4 +22,6 @@ public interface ReviewService {
     int FindOpposeNum(int film_review_id);
 
     boolean  checkReviewByid(int film_review_id);
+
+    List<Film_review> listReviewByWelcomeOrTime(String type);
 }

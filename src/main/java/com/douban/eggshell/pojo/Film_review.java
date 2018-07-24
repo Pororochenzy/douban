@@ -24,8 +24,9 @@ public class Film_review {
 
     private int isdelete;
 
-//    //有多少个人对你的影评发表评论(还是通过别的表来查吧)
-//    private  int respond_num;
+//    //有多少个人对你的影评发表评论
+
+    private Integer respond_num;
 
     //以下两个是外键
     private Movie movie;
@@ -33,5 +34,6 @@ public class Film_review {
     private UserInfo userInfo;
 
     private  Score score;
+
 
 }
