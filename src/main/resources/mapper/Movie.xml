@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.douban.eggshell.mapper.MovieMapper">
+
+    <select id="rankingByGrade" parameterType="int" resultType="Movie">
+        select * from movie where isdelete=0 order by grade desc limit #{row_num}
+    </select>
+
+    <insert id="addMovie" parameterType="Movie">
+        insert into movie value (<include refid="movie_property"/>)
+    </insert>
+
+
+
+
+    <sql id="movie_property">
+        null,
+        #{name},
+        #{imgurl},
+        #{director},
+        #{scriptwriter},
+        #{actor},
+        #{style},
+        #{area},
+        #{language},
+        #{release_date},
+        #{running_time},
+        #{alias},
+        #{introduction},
+        #{grade},
+        #{comment_num},
+        #{createtime},
+        #{isdelete}
+    </sql>
+
+</mapper>
