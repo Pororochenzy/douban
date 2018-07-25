@@ -1,15 +1,13 @@
 package com.douban.eggshell.web;
 
+import com.douban.eggshell.dto.MovieRankingDTO;
 import com.douban.eggshell.dto.Result;
 import com.douban.eggshell.enums.MovieEnums;
 import com.douban.eggshell.pojo.Movie;
 import com.douban.eggshell.service.MovieService;
 import com.douban.eggshell.vo.MovieRankingVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,11 +18,13 @@ public class MovieController {
     MovieService movieService;
 
     @RequestMapping(value = "/ranking", method = RequestMethod.GET)
-    public Result rankingDefault() {
+    public Result rankingDefault(@RequestParam(value = "row_num", defaultValue = "10") int row_num) {
         //固定显示10条排行榜数据
-        List<MovieRankingVO> movies = movieService.rankingDefault(10);
+        List<MovieRankingVO> movies = movieService.rankingDefault(row_num);
         if (movies != null) {
-            return Result.build(MovieEnums.RANKING_GET_SUCCESS, movies);
+            MovieRankingDTO data = new MovieRankingDTO();
+            data.setList(movies);
+            return Result.build(MovieEnums.RANKING_GET_SUCCESS, data);
         }
         return Result.build(MovieEnums.RANKING_GET_ERROR);
     }
