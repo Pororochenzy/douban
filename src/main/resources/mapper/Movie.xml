@@ -17,6 +17,17 @@
         select * from movie where id=#{id}
     </select>
 
+    <select id="findMovieByNameDirector" parameterType="Map" resultType="Movie">
+        select * from movie where name=#{name} and director=#{director}
+    </select>
+    
+    <update id="updateGrade" parameterType="Map">
+        update movie set grade=#{grade} where id=#{id}
+    </update>
+    
+    <update id="updateCommentNum" parameterType="Map">
+        update movie set comment_num=#{comment_num} where id=#{id}
+    </update>
 
 
 

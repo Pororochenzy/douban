@@ -2,6 +2,7 @@ package com.douban.eggshell.enums;
 
 public enum UserEnums implements BaseEnums {
     UNKNOW_ERROR(0, "未知错误"),
+    USER_LACK_PERMISSION(-3,"权限不足"),
 
     USER_LOGIN_SUCCESS(1, "登录成功"),
     USER_PASSWORD_ERROR(-1, "密码错误"),
