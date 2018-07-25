@@ -3,12 +3,15 @@ package com.douban.eggshell.web;
 import com.douban.eggshell.dto.MovieRankingDTO;
 import com.douban.eggshell.dto.Result;
 import com.douban.eggshell.enums.MovieEnums;
+import com.douban.eggshell.enums.UserEnums;
 import com.douban.eggshell.pojo.Movie;
 import com.douban.eggshell.service.MovieService;
+import com.douban.eggshell.util.SessionUtil;
 import com.douban.eggshell.vo.MovieRankingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -36,6 +39,22 @@ public class MovieController {
             return Result.build(MovieEnums.MOVIE_GET_SUCCESS, movie);
         }
         return Result.build(MovieEnums.MOVIE_NOT_EXIST);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public Result movie_post(Movie movie, HttpServletRequest request) {
+        //暂时未做权限控制，只判断登录状态
+        if (!SessionUtil.isLogin(request)) {
+            return Result.build((UserEnums.USER_LACK_PERMISSION));
+        }
+        //判断是否已经存在该电影（只通过电影名和导演名判断）
+        if (movie != null && movieService.isExistMovie(movie.getName(), movie.getDirector())) {
+            return Result.build(MovieEnums.MOVIE_IS_EXIST);
+        }
+        if (movieService.addMovie(movie)) {
+            return Result.build(MovieEnums.MOVIE_POST_SUCCESS);
+        }
+        return Result.build(MovieEnums.MOVIE_POST_ERROR);
     }
 
 }

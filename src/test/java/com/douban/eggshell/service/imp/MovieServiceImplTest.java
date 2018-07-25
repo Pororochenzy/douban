@@ -27,12 +27,22 @@ public class MovieServiceImplTest {
 
     @Test
     public void rankingDefault() {
-        List<MovieRankingVO> list =  movieService.rankingDefault(10);
+        List<MovieRankingVO> list = movieService.rankingDefault(10);
         list.forEach(System.out::println);
     }
 
     @Test
     public void findMovieById() {
         System.out.println(movieService.findMovieById(1));
+    }
+
+    @Test
+    public void isExistMovie() {
+        System.out.println(movieService.isExistMovie("杜甫传", "李白"));
+    }
+
+    @Test
+    public void updateGrade() {
+        System.out.println(movieService.updateCommentNum(1, 50));
     }
 }

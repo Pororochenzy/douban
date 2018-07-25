@@ -142,10 +142,12 @@ public class FileReaderUtil {
             if (line.isEmpty()) {
                 return true;
             }
-            for (String str : skipList) {
-                if (line.startsWith(str) || line.endsWith(str)) {
-                    //逐一过滤，跳过包含指定字符串的行
-                    return true;
+            if (skipList != null) {
+                for (String str : skipList) {
+                    if (line.startsWith(str) || line.endsWith(str)) {
+                        //逐一过滤，跳过包含指定字符串的行
+                        return true;
+                    }
                 }
             }
         }

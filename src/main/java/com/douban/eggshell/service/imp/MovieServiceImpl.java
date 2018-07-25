@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -43,6 +45,39 @@ public class MovieServiceImpl implements MovieService {
     public boolean addMovie(Movie movie) {
         if (movie != null) {
             return movieMapper.addMovie(movie) > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isExistMovie(String name, String director) {
+        if (name != null && director != null) {
+            Map<String, String> map = new HashMap<>();
+            map.put("name", name);
+            map.put("director", director);
+            return movieMapper.findMovieByNameDirector(map) != null;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateGrade(int id, double grade) {
+        if (id > 0 && grade >= 0 && grade <= 10) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            map.put("grade", grade);
+            return movieMapper.updateGrade(map) > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCommentNum(int id, int comment_num) {
+        if (id > 0 && comment_num >= 0) {
+            Map<String, Integer> map = new HashMap<>();
+            map.put("id", id);
+            map.put("comment_num", comment_num);
+            return movieMapper.updateCommentNum(map) > 0;
         }
         return false;
     }

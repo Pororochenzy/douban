@@ -13,5 +13,10 @@ public interface MovieService {
 
     boolean addMovie(Movie movie);
 
+    boolean isExistMovie(String name, String director);
+
+    boolean updateGrade(int id, double grade);
+
+    boolean updateCommentNum(int id, int comment_num);
 
 }
