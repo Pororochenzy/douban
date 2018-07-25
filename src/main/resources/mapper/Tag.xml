@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.douban.eggshell.mapper.TagMapper">
+    <select id="listArea" resultType="TypeArea">
+        select * from area
+    </select>
+
+    <select id="listStyle" resultType="TypeStyle">
+        select * from style
+    </select>
+
+    <!--根据标签模糊查找-->
+    <select id="findByType" parameterType="map" resultMap="movieTypeMap">
+        select m.id as m_id,m.name as m_name,m.imgurl as m_imgurl,m.grade as m_grade , m.comment_num as
+        m_comment_numfrom FROM movie m
+        <where>
+
+            <if test="area!=null">
+                and area like concat('%',#{area},'%')
+            </if>
+
+            <if test="style!=null">
+                and style like concat('%',#{style},'%')
+            </if>
+
+            <if test="start!=null and end!=null">
+                and grade &gt;=#{start} and grade &lt;=#{end}
+            </if>
+
+
+
+
+        </where>
+        <if test='sort=="H" '>
+             ORDER BY comment_num desc
+        </if>
+
+        <if test='sort=="G" '>
+             ORDER BY grade desc
+        </if>
+
+        <if test='sort=="T" '>
+             ORDER BY release_date desc
+        </if>
+        <!--<choose>
+            <when test="sort==G">
+                ORDER  BY  grade desc
+            </when>
+            <when test="sort==T">
+                ORDER  BY  release_date desc
+            </when>
+            <otherwise>
+                ORDER  BY comment_num desc
+            </otherwise>
+        </choose>-->
+    </select>
+
+    <resultMap id="movieTypeMap" type="com.douban.eggshell.vo.TagGetMovieVo">
+        <id property="id" column="m_id"/>
+        <result property="name" column="m_name"/>
+        <result property="imgurl" column="m_imgurl"/>
+        <result property="grade" column="m_grade"/>
+    </resultMap>
+    
+    <!--查是否存在此类型的电影-->
+    <select id="findStyleByName" resultType="Style">
+        select * from style where name =#{name}
+    </select>
+</mapper>

@@ -58,6 +58,7 @@ public class ReviewController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Result review(@RequestParam(value = "movie_id") int movie_id, @RequestParam(value = "title") String title, @RequestParam(value = "comment") String comment, HttpServletRequest request) {
+
         User currenuser = (User) request.getSession().getAttribute("currentuser");
         if (currenuser != null) {
             int userinfo_id = userInfoService.findByUser(currenuser).getId();
