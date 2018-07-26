@@ -2,8 +2,10 @@ package com.douban.eggshell.service.imp;
 
 import com.douban.eggshell.mapper.MovieMapper;
 import com.douban.eggshell.pojo.Movie;
+import com.douban.eggshell.pojo.Score;
 import com.douban.eggshell.service.MovieService;
 import com.douban.eggshell.vo.MovieRankingVO;
+import com.douban.eggshell.vo.MovieVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,24 +19,36 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     MovieMapper movieMapper;
 
+
     @Override
-    public List<MovieRankingVO> rankingDefault(int row_num) {
-        if (row_num <= 0) {
-            row_num = 1;
+    public List<MovieRankingVO> rankingMovie(String style) {
+        if (style == null || style.trim().isEmpty()) {
+            style = null;
+        } else {
+            style = "%" + style.trim() + "%";
         }
-        List<Movie> rankList = movieMapper.rankingByGrade(row_num);
-        if (rankList != null) {
-            List<MovieRankingVO> dataList = new ArrayList<>();
-            for (Movie m : rankList) {
-                dataList.add(new MovieRankingVO(m));
+        Map<String, String> map = new HashMap<>();
+        map.put("style", style);
+        List<Movie> rankList = movieMapper.rankingMovie(map);
+        return pojoListToVOList(rankList);
+    }
+
+    /**
+     * 将电影的pojo列表转换为vo列表
+     */
+    private List<MovieRankingVO> pojoListToVOList(List<Movie> list) {
+        if (list != null) {
+            List<MovieRankingVO> voList = new ArrayList<>();
+            for (Movie m : list) {
+                voList.add(new MovieRankingVO(m));
             }
-            return dataList;
+            return voList;
         }
         return null;
     }
 
     @Override
-    public Movie findMovieById(int id) {
+    public MovieVO findMovieById(int id) {
         if (id > 0) {
             return movieMapper.findMovieById(id);
         }
@@ -55,7 +69,7 @@ public class MovieServiceImpl implements MovieService {
             Map<String, String> map = new HashMap<>();
             map.put("name", name);
             map.put("director", director);
-            return movieMapper.findMovieByNameDirector(map) != null;
+            return movieMapper.findMovieByNameDirector(map).size() > 0;
         }
         return false;
     }
@@ -78,6 +92,47 @@ public class MovieServiceImpl implements MovieService {
             map.put("id", id);
             map.put("comment_num", comment_num);
             return movieMapper.updateCommentNum(map) > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isExistStyle(String name) {
+        if (name != null) {
+            return movieMapper.findStyleByName(name) != null;
+        }
+        return false;
+    }
+
+    /**
+     * 通过电影名搜索电影，模糊查询
+     */
+    @Override
+    public List<MovieRankingVO> searchMovie(String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            Map<String, String> map = new HashMap<>();
+            map.put("name", "%" + name.trim() + "%");
+            List<Movie> list = movieMapper.findMovieByNameDirector(map);
+            return pojoListToVOList(list);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addMovieScore(Score score) {
+        //进来之前应先判断是否已经评过分
+        if (score != null) {
+            if (movieMapper.addMovieScore(score) > 0) {
+                //评分增加成功，更新Movie表数据
+                Map<String, Object> scoreMap = movieMapper.getScoreByMovieId(score.getMovie_id());
+                if (scoreMap != null) {
+                    double grade = (double) scoreMap.get("grade");
+                    int comment_num = (int) scoreMap.get("comment_num");
+                    grade = (double) Math.round(grade * 10) / 10;
+                    return updateGrade(score.getMovie_id(), grade) &&
+                            updateCommentNum(score.getMovie_id(), comment_num);
+                }
+            }
         }
         return false;
     }

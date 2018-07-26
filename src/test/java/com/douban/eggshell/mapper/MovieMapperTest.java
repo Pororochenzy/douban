@@ -63,10 +63,10 @@ public class MovieMapperTest {
 
     @Test
     public void rankingByGrade() {
-        List<Movie> movies =  movieMapper.rankingByGrade(10);
-        if (movies!=null){
-            movies.forEach(System.out::println);
-
-        }
+//        List<Movie> movies =  movieMapper.rankingByGrade(10);
+//        if (movies!=null){
+//            movies.forEach(System.out::println);
+//
+//        }
     }
 }
