@@ -30,7 +30,9 @@ public class FileReaderUtilTest {
         List<String> skipStrs = new ArrayList<>();
         skipStrs.add("IMDb");
         skipStrs.add("剧情简介");
-        FileReaderUtil.initReader("D:\\Chrysanthes\\Documents\\中软\\filmsDetail.txt", skipStrs);
+        skipStrs.add("导演剪辑");
+
+        FileReaderUtil.initReader("C:\\Users\\chen\\Desktop\\豆瓣爬取\\filmsDetail.txt", skipStrs);
         FileReaderUtil.checkFileMatch(12);
     }
 }

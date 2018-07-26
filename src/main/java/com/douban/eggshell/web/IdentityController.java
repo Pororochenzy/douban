@@ -192,8 +192,6 @@ public class IdentityController {
                 //通过req.getServletContext().getRealPath("") 获取当前项目的真实路径，然后拼接前面的文件名
                 String destFileName = request.getServletContext().getRealPath("") + "uploaded" + File.separator + fileName;
                 //第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录
-
-
                 File destFile = new File(destFileName);
                 if(!destFile.getParentFile().exists()){
                     destFile.getParentFile().mkdirs();

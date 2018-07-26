@@ -57,7 +57,7 @@ public class ReviewController {
      * @param request
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)  //注意！！！ title 和comment 变量已经交换  comment  movie_id
     public Result review_post(@RequestParam(value = "movie_id") int movie_id,
                               @RequestParam(value = "title") String title,
                               @RequestParam(value = "comment") String comment,
