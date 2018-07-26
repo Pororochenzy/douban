@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.douban.eggshell.mapper.RespondMapper">
+    <select id="listRespond" resultMap="resMap" parameterType="int">
+select res.id as res_id ,
+res.comment as res_comment ,
+res.createtime as res_createtime ,
+ui.id as ui_id,
+ui.nickname as ui_nickname,
+ ui.imgurl as ui_imgurl
+from respond res LEFT JOIN  (select * from user_info) as ui on res.user_info_id = ui.id
+ where film_review_id =#{id}  and res.isdelete=0
+
+    </select>
+    <resultMap id="resMap" type="com.douban.eggshell.vo.respond.RespVo">
+        <id property="id" column="res_id"/>
+        <result property="comment" column="res_comment"/>
+        <result property="createtime" column="res_createtime"/>
+        <association property="userInfo" javaType="com.douban.eggshell.vo.respond.RespUserVo">
+            <id property="id" column="ui_id"/>
+            <result property="nickname" column="ui_nickname"/>
+            <result property="imgurl" column="ui_imgurl"/>
+
+        </association>
+    </resultMap>
+
+
+    <insert id="addResond" parameterType="map">
+          INSERT INTO respond(comment,createtime,user_info_id,film_review_id) VALUES(#{comment},#{createtime},#{userinfo_id},#{review_id});
+    </insert>
+
+    <update id="updateResNum">
+
+    </update>
+</mapper>

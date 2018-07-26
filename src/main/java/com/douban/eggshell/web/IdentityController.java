@@ -49,6 +49,7 @@ public class IdentityController {
 
     /**
      * 用户登录
+     *
      * @param email
      * @param pwd
      * @param request
@@ -81,6 +82,7 @@ public class IdentityController {
 
     /**
      * 用户注册
+     *
      * @param user
      * @param request
      * @param nickname
@@ -118,6 +120,7 @@ public class IdentityController {
 
     /**
      * 检查邮箱
+     *
      * @param email
      * @return
      */
@@ -168,11 +171,11 @@ public class IdentityController {
 
     /**
      * 用户详情 修改
+     *
      * @param updateVo
      * @param request
      * @param avater
-     * @return
-     * 服务器 图片的存放绝对路径是@C: Users//chen//AppData//Local//Temp//tomcat-docbase.4918370418639826426.80//uploaded//1532445687781屏幕截图(3).png
+     * @return 服务器 图片的存放绝对路径是@C: Users//chen//AppData//Local//Temp//tomcat-docbase.4918370418639826426.80//uploaded//1532445687781屏幕截图(3).png
      */
     @RequestMapping(value = "/people", method = RequestMethod.POST)
     public Result people_post(UserInfoUpdateVo updateVo, HttpServletRequest request, @RequestParam(value = "avater", required = false) MultipartFile avater) {
@@ -192,17 +195,19 @@ public class IdentityController {
 
 
                 File destFile = new File(destFileName);
-                destFile.getParentFile().mkdirs();
+                if(!destFile.getParentFile().exists()){
+                    destFile.getParentFile().mkdirs();
+                }
                 try {
                     avater.transferTo(destFile);
                     //将图片在服务器的保存位置 赋给vo , 之后存入数据库
 
                     //返回一个相对路径的头像地址给前端
                     int index = destFileName.indexOf("uploaded");
-                   String relPathName= destFileName.substring(index-1);
+                    String relPathName = destFileName.substring(index - 1);
                     updateVo.setImgurl(relPathName);
 
-                    log.info("服务器 图片的存放绝对路径是{}",destFile);
+                    log.info("服务器 图片的存放绝对路径是{}", destFile);
 //                    log.info("图片的存放路径是{}",destFileName);
 //                    log.info("对象imgurl属性{}",updateVo.getImgurl());
 //                    log.info("对象介绍属性{}",updateVo.getIntroduction());
@@ -233,6 +238,7 @@ public class IdentityController {
 
     /**
      * 退出登录
+     *
      * @param request
      * @return
      */

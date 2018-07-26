@@ -14,23 +14,23 @@
         select * from user_info where id=#{id}
     </select>
 
-    <!--给我一个user 还你一个userinfo-->
+    <!--给我一个user id  还你一个userinfo-->
     <select id="findByUser" parameterType="User" resultMap="UserInfoMap">
-      select *,u.id u_id from user u  INNER JOIN user_info  ui on u.id=ui.user_id where u.id=#{id}
+     select *,u.id as u_id ,ui.id as ui_id from user_info ui INNER JOIN user u on  u.id = ui.user_id where u.id=#{id}
     </select>
 
     <resultMap id="UserInfoMap" type="UserInfo">
-        <id column="id" property="id"></id>
+        <id column="ui_id" property="id"></id>
         <result property="nickname" column="nickname"></result>
         <result property="introduction" column="introduction"></result>
         <result property="sex" column="sex"></result>
         <result property="imgurl" column="imgurl"></result>
         <result property="createtime" column="createtime"></result>
-        <collection property="user" ofType="User">
+        <association property="user" javaType="User">
             <id column="u_id" property="id"></id>
             <result column="email" property="email"></result>
             <result  column="password" property="password"></result>
-        </collection>
+        </association>
 
     </resultMap>
 

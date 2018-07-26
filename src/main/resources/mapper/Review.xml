@@ -19,11 +19,11 @@ SELECT
         fr_createtime , m.id as m_id ,m.name as m_name, m.imgurl as m_imgurl,m.director as m_director,m.actor as m_actor,
 m.style as m_style,m.area as m_area,m.release_date as m_release_date,  ui.id as ui_id, ui.nickname as ui_nickname,ui.imgurl as
         ui_imgurl , COALESCE(respond_num,0) as respond_num
-        ,(support+oppose)*0.4+support*0.6 as welcome,score.star as score_star
+        ,(support+oppose)*0.4+support*0.6 as welcome, COALESCE(score.star,0) as score_star
         from film_review fr
         INNER JOIN movie m on fr.movie_id=m.id
         INNER JOIN user_info ui on fr.user_info_id=ui.id
-        INNER JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
+        left JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
         left JOIN (select film_review_id ,count(*) as respond_num from respond GROUP BY film_review_id) as numtable on
         numtable.respond_num = fr.id
         left JOIN (select star,user_info_id,movie_id from score) as score on score.user_info_id = fr.id and  score.movie_id = m.id
@@ -115,11 +115,11 @@ INSERT INTO film_review(title,comment,user_info_id,movie_id,createtime) VALUES(#
         fr_createtime , m.id as m_id ,m.name as m_name, m.imgurl as m_imgurl,ui.id as ui_id, ui.nickname as
         ui_nickname,ui.imgurl as
         ui_imgurl , COALESCE(respond_num,0) as respond_num
-        ,(support+oppose)*0.4+support*0.6 as welcome,score.star as score_star
+        ,(support+oppose)*0.4+support*0.6 as welcome, COALESCE (score.star,0) as score_star
         from film_review fr
         INNER JOIN movie m on fr.movie_id=m.id
         INNER JOIN user_info ui on fr.user_info_id=ui.id
-        INNER JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
+        left JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
         left JOIN (select film_review_id ,count(*) as respond_num from respond GROUP BY film_review_id) as numtable on
         numtable.respond_num = fr.id
         left JOIN (select star,user_info_id,movie_id from score) as score on score.user_info_id = fr.id and

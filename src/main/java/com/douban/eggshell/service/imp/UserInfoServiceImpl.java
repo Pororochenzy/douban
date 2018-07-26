@@ -37,7 +37,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo findByUser(User user) {
+    public UserInfo findByUser(User  user) {
         return  userInfoMapper.findByUser(user);
 
     }

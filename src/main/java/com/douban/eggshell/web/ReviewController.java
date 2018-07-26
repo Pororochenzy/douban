@@ -5,6 +5,7 @@ import com.douban.eggshell.enums.UserEnums;
 import com.douban.eggshell.pojo.Film_review;
 import com.douban.eggshell.pojo.Score;
 import com.douban.eggshell.pojo.User;
+import com.douban.eggshell.pojo.UserInfo;
 import com.douban.eggshell.service.ReviewService;
 import com.douban.eggshell.service.UserInfoService;
 import com.douban.eggshell.util.PageVoUtil;
@@ -36,7 +37,7 @@ public class ReviewController {
      * @return
      */
     @RequestMapping(value = "/{film_review_id}", method = RequestMethod.GET)
-    public Result review(@PathVariable("film_review_id") int reciew_id) {
+    public Result review_get(@PathVariable("film_review_id") int reciew_id) {
 //        log.info("传入的值是:{}",reciew_id);
 
         Film_review review = reviewService.findReviewByid(reciew_id);
@@ -56,23 +57,47 @@ public class ReviewController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public Result review(@RequestParam(value = "movie_id") int movie_id, @RequestParam(value = "title") String title, @RequestParam(value = "comment") String comment, HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST)
+    public Result review_post(@RequestParam(value = "movie_id") int movie_id,
+                              @RequestParam(value = "title") String title,
+                              @RequestParam(value = "comment") String comment,
+                              HttpServletRequest request) {
 
-        User currenuser = (User) request.getSession().getAttribute("currentuser");
-        if (currenuser != null) {
-            int userinfo_id = userInfoService.findByUser(currenuser).getId();
+        log.info("movie_id是:" + movie_id);
+        log.info("title是:" + title);
 
-
-            boolean falg = reviewService.addReview(title, comment, userinfo_id, movie_id);
-            if (falg) {
-                return Result.build(UserEnums.REVIEW_ADD_SUCCESS);
-            } else {
-                return Result.build(UserEnums.REVIEW_ADD_ERROR);
-            }
-        } else {
+        if (!SessionUtil.isLogin(request)) {
             return Result.build(UserEnums.USER_NOT_LOGIN);
         }
+        User currenuser = SessionUtil.getUser(request);
+        log.info("session里的id,email,pwd是:{}", currenuser);
+        //userinfo ID 正常来说是14 才对  但是出现了17 。
+        //通过user表的id  查找 user_info表
+        UserInfo userInfo = userInfoService.findByUser(currenuser);
+        log.info("打印userinfo值：{}", userInfo);
+        int ui_id = userInfo.getId();
+
+        boolean flag = reviewService.addReview(title, comment, ui_id, movie_id);
+        if (flag) {
+            return Result.build(UserEnums.REVIEW_ADD_SUCCESS);
+        }
+        return Result.build(UserEnums.REVIEW_ADD_ERROR);
+
+//        User currenuser = SessionUtil.getUser(request);
+//        log.info("userinfo的id是:", currenuser.getId());
+//        if (currenuser != null) {
+//            int userinfo_id = userInfoService.findByUser(currenuser).getId();
+//
+//
+//            boolean flag = reviewService.addReview(title, comment, userinfo_id, movie_id);
+//            if (flag) {
+//                return Result.build(UserEnums.REVIEW_ADD_SUCCESS);
+//            } else {
+//                return Result.build(UserEnums.REVIEW_ADD_ERROR);
+//            }
+//        } else {
+//            return Result.build(UserEnums.USER_NOT_LOGIN);
+//        }
 
     }
 
@@ -85,23 +110,20 @@ public class ReviewController {
      */
     @RequestMapping(value = "/check_is_score")
     public Result check_is_score(@RequestParam(value = "movie_id") int movie_id, HttpServletRequest request) {
-        User currenuser = (User) request.getSession().getAttribute("currentuser");
-        if (currenuser != null) {
-            //判断一下用户是否有对当前这部电影有打过分
-            int userinfo_id = userInfoService.findByUser(currenuser).getId();
-
-            Score scoreObj = reviewService.checkUserGiveScoreToOneMovie(userinfo_id, movie_id);
-            if (scoreObj != null) {//当前用户给该电影打过分了
-                //拿到它打的几分
-//                int star = scoreObj.getStar();
-                return Result.build(UserEnums.USER_ALEADLY_SCORE, scoreObj);
-            } else { //当前用户还未打分
-                return Result.build(UserEnums.USER_NO_SCORE);
-            }
-
-        } else {
+        if (!SessionUtil.isLogin(request)) {
             return Result.build(UserEnums.USER_NOT_LOGIN);
         }
+        User user = SessionUtil.getUser(request);
+        UserInfo userInfo = userInfoService.findByUser(user);
+//          log.info("打分模块，userInfo的值：{}", userInfo);
+        Score scoreObj = reviewService.checkUserGiveScoreToOneMovie(userInfo.getId(), movie_id);
+        if (scoreObj != null) {
+            //拿到它打的几分
+            int star = scoreObj.getStar();
+            return Result.build(UserEnums.USER_ALEADLY_SCORE, scoreObj);
+        }
+        return Result.build(UserEnums.USER_NO_SCORE);
+
 
     }
 
@@ -115,11 +137,11 @@ public class ReviewController {
     @RequestMapping(value = "/support", method = RequestMethod.PUT)
     public Result support(@RequestParam(value = "film_review_id") int film_review_id, HttpServletRequest request) {
         log.info("传入的值参数是：{}", film_review_id);
-        //登录才能点赞, SessionUtil.isLogin（）用户登录了后返回true,未登录返回false
+        //取消 登录才能点赞, SessionUtil.isLogin（）用户登录了后返回true,未登录返回false
 
-        if (SessionUtil.isLogin(request) == false) {
-            return Result.build((UserEnums.USER_NOT_LOGIN));
-        }
+//        if (SessionUtil.isLogin(request) == false) {
+//            return Result.build((UserEnums.USER_NOT_LOGIN));
+//        }
 
         //log.info("赞同，登录状态bollean值:,{}",SessionUtil.isLogin(request)); // 登录了 返回false
 
@@ -147,11 +169,11 @@ public class ReviewController {
      */
     @RequestMapping(value = "/oppose", method = RequestMethod.PUT)
     public Result oppose(@RequestParam(value = "film_review_id") int film_review_id, HttpServletRequest request) {
+//
+//        if (!SessionUtil.isLogin(request)) {
+//            return Result.build((UserEnums.USER_NOT_LOGIN));
+//        }
 
-        if (!SessionUtil.isLogin(request)) {
-            return Result.build((UserEnums.USER_NOT_LOGIN));
-        }
-        log.info("反对，登录状态bollean值:,{}", SessionUtil.isLogin(request)); // 登录了 返回false
 
 //        检查传入的电影id是否存在
         if (!reviewService.checkReviewByid(film_review_id)) {
@@ -175,7 +197,7 @@ public class ReviewController {
      * @return
      */
     @RequestMapping(value = "/best", method = RequestMethod.GET)
-    public Result review_best(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "2") int size) {
+    public Result review_best(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
         //2. 根据start,size进行分页，并且可以设置id 倒排序PageHelper.startPage(start,size,"id asc");
         PageHelper.startPage(start, size);
 
@@ -183,9 +205,14 @@ public class ReviewController {
         //因为这个 PageHelper工具类会帮我们在XML的id=“XXXX”的那SQl里的 自动为我们拼接limit() 做那些工作
         List<Film_review> bestReviews = reviewService.listReviewByWelcomeOrTime("welcome");
 
+        ReviewPageVO pageVO = PageVoUtil.getVoByResults(bestReviews);
 
-        //4. 根据返回的集合List，创建PageInfo对象
-        PageInfo<Film_review> film_reviewPageInfo = new PageInfo<>(bestReviews);
+        if (bestReviews != null) {
+            return Result.build(UserEnums.USERINFO_GET_SUCCESS, pageVO);
+        }
+        return Result.build(UserEnums.REVIEWLIST_GET_ERROR);
+        //4. 根据返回的集合List，创建PageInfo对象  (还没 封装之前的代码如下)
+       /* PageInfo<Film_review> film_reviewPageInfo = new PageInfo<>(bestReviews);
         int cur_page = film_reviewPageInfo.getPageNum();//当前页数
         int total_page = film_reviewPageInfo.getPages(); //总页数
         long sum = film_reviewPageInfo.getTotal();//总影评数量
@@ -198,7 +225,8 @@ public class ReviewController {
             br.setList(bestReviews);
             return Result.build(UserEnums.USERINFO_GET_SUCCESS, br);
         }
-        return Result.build(UserEnums.REVIEWLIST_GET_ERROR);
+        return Result.build(UserEnums.REVIEWLIST_GET_ERROR);*/
+
     }
 
     /**
@@ -215,7 +243,7 @@ public class ReviewController {
         PageHelper.startPage(start, size);
 
         List<Film_review> lateReviews = reviewService.listReviewByWelcomeOrTime("latest");
-        log.info("lateReviews的值是{}",lateReviews);
+        //log.info("lateReviews的值是{}", lateReviews);
 
         ReviewPageVO pageVO = PageVoUtil.getVoByResults(lateReviews);
 

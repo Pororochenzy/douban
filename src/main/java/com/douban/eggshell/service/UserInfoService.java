@@ -12,7 +12,7 @@ public interface UserInfoService {
 
     UserInfo findUserInfoById(int id);
 
-    UserInfo findByUser(User user);
+    UserInfo findByUser(User user );
 
     boolean updateUserInfo(UserInfoUpdateVo updateVo);
 }

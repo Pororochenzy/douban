@@ -40,7 +40,11 @@ public enum UserEnums implements BaseEnums {
 
     REVIEWLIST_GET_ERROR(-1,"获取失败"),
 
-    NO_FIND_RESULT(2,"无结果");
+    NO_FIND_RESULT(2,"无结果"),
+
+    COMMENT_SUCCESS(1,"评论成功"),
+    COMMENT_ERROR(-2,"评论失败");
+
 
 
 

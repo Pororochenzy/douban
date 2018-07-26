@@ -54,16 +54,12 @@ public class TagController {
                                 @RequestParam(value = "tags", required = false) String tags,
                                 @RequestParam(value = "page", defaultValue = "0") int start,
                                 @RequestParam(value = "size", defaultValue = "10") int size) {
-//        log.info("sort的值是:{}",sort);
-//        log.info("range:{}",range);
         if(tags.trim().equals("")){
             tags = null;
         }
-        log.info("tags的值是:{}",tags);
-        
+
         PageHelper.startPage(start, size);
         
-        /*有bug*/
 
        /* Map<String,Object> map  = new HashMap<>();
         map.put("sore","T");
@@ -74,7 +70,6 @@ public class TagController {
         List<TagGetMovieVo> tagGetMovieVos = tagMapper.findByType(map);*/
         List<TagGetMovieVo> tagGetMovieVos = tagService.findByType(sort, range, tags);
 
-        log.info("tagGetMovieVos的值是{}",tagGetMovieVos);
 
         if (tagGetMovieVos != null) {
 

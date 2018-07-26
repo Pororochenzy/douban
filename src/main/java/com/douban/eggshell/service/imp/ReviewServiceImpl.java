@@ -25,7 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public boolean addReview(String title, String comment, int userinfo_id, int movie_id) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("comment", comment);
         map.put("userinfo_id", userinfo_id);
