@@ -4,7 +4,12 @@ import com.douban.eggshell.dto.Result;
 import com.douban.eggshell.enums.MovieEnums;
 import com.douban.eggshell.enums.UserEnums;
 import com.douban.eggshell.pojo.Movie;
+import com.douban.eggshell.pojo.Score;
+import com.douban.eggshell.pojo.User;
 import com.douban.eggshell.service.MovieService;
+import com.douban.eggshell.service.ReviewService;
+import com.douban.eggshell.service.UserInfoService;
+import com.douban.eggshell.util.DateUtil;
 import com.douban.eggshell.util.PageVoUtil;
 import com.douban.eggshell.util.SessionUtil;
 import com.douban.eggshell.vo.MovieRankingVO;
@@ -15,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,6 +28,12 @@ import java.util.List;
 public class MovieController {
     @Autowired
     MovieService movieService;
+
+    @Autowired
+    ReviewService reviewService;
+
+    @Autowired
+    UserInfoService userInfoService;
 
 
     @RequestMapping(value = "/ranking", method = RequestMethod.GET)
@@ -79,6 +91,37 @@ public class MovieController {
             return Result.build(MovieEnums.RANKING_GET_SUCCESS, pageVO);
         }
         return Result.build(MovieEnums.RANKING_GET_ERROR);
+    }
+
+    @RequestMapping(value = "/score", method = RequestMethod.POST)
+    public Result scoreMovie(@RequestParam(value = "movie_id") int movie_id,
+                             @RequestParam(value = "score") int star,
+                             HttpServletRequest request) {
+        if (!SessionUtil.isLogin(request)) {
+            return Result.build((UserEnums.USER_NOT_LOGIN));
+        }
+        if (movie_id > 0 && star >= 1 && star <= 5) {
+            if (movieService.findMovieById(movie_id) == null) {
+                //电影不存在
+                return Result.build(MovieEnums.MOVIE_NOT_EXIST);
+            }
+            User cur_user = SessionUtil.getUser(request);
+            int user_info_id = userInfoService.findByUser(cur_user).getId();
+            Score score = reviewService.checkUserGiveScoreToOneMovie(user_info_id, movie_id);
+            if (score == null) {
+                //当前用户未对指定电影评过分
+                score = new Score();
+                score.setUser_info_id(user_info_id);
+                score.setMovie_id(movie_id);
+                score.setStar(star);
+                score.setCreatetime(DateUtil.dataToString(new Date()));
+                if (movieService.addMovieScore(score)) {
+                    score = reviewService.checkUserGiveScoreToOneMovie(user_info_id, movie_id);
+                    return Result.build(MovieEnums.SCORE_POST_SUCCESS, score.getStar());
+                }
+            }
+        }
+        return Result.build(MovieEnums.SCORE_POST_ERROR);
     }
 
 }

@@ -14,7 +14,10 @@ public enum MovieEnums implements BaseEnums {
     MOVIE_POST_ERROR(-1, "添加失败"),
     MOVIE_IS_EXIST(-2, "电影已存在"),
 
-    STYLE_NOT_EXIST(-2, "类型不存在");
+    STYLE_NOT_EXIST(-2, "类型不存在"),
+
+    SCORE_POST_SUCCESS(1, "评分成功"),
+    SCORE_POST_ERROR(-2, "评分失败");
 
 
     Integer code;

@@ -56,7 +56,7 @@
     <!--给电影增加评分-->
     <insert id="addMovieScore" parameterType="Score">
         insert into score(star,createtime,user_info_id,movie_id)
-        values (#{star},#{createtime},#{user_info},#{movie_id})
+        values (#{star},#{createtime},#{user_info_id},#{movie_id})
     </insert>
 
     <!--通过电影id获取最新的评分和评分人数数据-->
@@ -64,9 +64,6 @@
         select ifnull(sum(star)/count(*)*2,0) as grade,
         count(*) as comment_num from score where movie_id=#{id};
     </select>
-
-
-
 
 
 
