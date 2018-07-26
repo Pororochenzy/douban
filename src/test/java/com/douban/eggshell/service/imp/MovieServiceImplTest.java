@@ -27,8 +27,7 @@ public class MovieServiceImplTest {
 
     @Test
     public void rankingDefault() {
-        List<MovieRankingVO> list = movieService.rankingDefault(10);
-        list.forEach(System.out::println);
+        System.out.println(movieMapper.getScoreByMovieId(1));
     }
 
     @Test
@@ -44,5 +43,18 @@ public class MovieServiceImplTest {
     @Test
     public void updateGrade() {
         System.out.println(movieService.updateCommentNum(1, 50));
+    }
+
+    @Test
+    public void rankingMovie() {
+        List<MovieRankingVO> list = movieService.rankingMovie(null);
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    public void searchMovie() {
+        List<MovieRankingVO> list = movieService.searchMovie("杀手");
+        list.forEach(System.out::println);
+
     }
 }

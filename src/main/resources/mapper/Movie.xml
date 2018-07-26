@@ -5,31 +5,112 @@
 
 <mapper namespace="com.douban.eggshell.mapper.MovieMapper">
 
-    <select id="rankingByGrade" parameterType="int" resultType="Movie">
-        select * from movie where isdelete=0 order by grade desc limit #{row_num}
+    <!--通过类型名判断是否存在该类型-->
+    <select id="findStyleByName" resultType="TypeStyle">
+        select * from style where name=#{name}
     </select>
 
+    <!--电影排行榜，不传style则为默认排行榜，否则为分类排行榜-->
+    <select id="rankingMovie" parameterType="Map" resultType="Movie">
+        select * from movie where isdelete=0
+        <if test="style!=null">
+            and style like #{style}
+        </if>
+        order by grade desc
+    </select>
+
+    <!--新增电影-->
     <insert id="addMovie" parameterType="Movie">
         insert into movie value (<include refid="movie_property"/>)
     </insert>
 
-    <select id="findMovieById" parameterType="int" resultType="Movie">
-        select * from movie where id=#{id}
+    <!--通过电影id查找电影信息，包含电影评分1-5星信息-->
+    <select id="findMovieById" parameterType="int" resultMap="MovieMap">
+        <include refid="findMovieById_sql"/>
     </select>
 
+    <!--通过电影名（搜索）或电影名+导演名（查重）查找电影-->
     <select id="findMovieByNameDirector" parameterType="Map" resultType="Movie">
-        select * from movie where name=#{name} and director=#{director}
+        select * from movie where 1=1
+        <choose>
+            <when test="director!=null">
+                and name=#{name}
+                and director=#{director}
+            </when>
+            <otherwise>
+                and name like #{name}
+            </otherwise>
+        </choose>
     </select>
-    
+
+    <!--更新电影评分-->
     <update id="updateGrade" parameterType="Map">
         update movie set grade=#{grade} where id=#{id}
     </update>
-    
+
+    <!--更新评分总人数-->
     <update id="updateCommentNum" parameterType="Map">
         update movie set comment_num=#{comment_num} where id=#{id}
     </update>
 
+    <!--给电影增加评分-->
+    <insert id="addMovieScore" parameterType="Score">
+        insert into score(star,createtime,user_info_id,movie_id)
+        values (#{star},#{createtime},#{user_info},#{movie_id})
+    </insert>
 
+    <!--通过电影id获取最新的评分和评分人数数据-->
+    <select id="getScoreByMovieId" parameterType="int" resultType="Map">
+        select ifnull(sum(star)/count(*)*2,0) as grade,
+        count(*) as comment_num from score where movie_id=#{id};
+    </select>
+
+
+
+
+
+
+    <resultMap id="MovieMap" type="com.douban.eggshell.vo.MovieVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="imgurl" column="imgurl"/>
+        <result property="director" column="director"/>
+        <result property="scriptwriter" column="scriptwriter"/>
+        <result property="actor" column="actor"/>
+        <result property="style" column="style"/>
+        <result property="area" column="area"/>
+        <result property="language" column="language"/>
+        <result property="release_date" column="release_date"/>
+        <result property="running_time" column="running_time"/>
+        <result property="alias" column="alias"/>
+        <result property="introduction" column="introduction"/>
+        <result property="grade" column="grade"/>
+        <result property="comment_num" column="comment_num"/>
+        <association property="score_detail" javaType="com.douban.eggshell.vo.ScoreVO">
+            <result property="one_star" column="one"/>
+            <result property="two_star" column="two"/>
+            <result property="three_star" column="three"/>
+            <result property="four_star" column="four"/>
+            <result property="five_star" column="five"/>
+        </association>
+    </resultMap>
+
+    <sql id="findMovieById_sql">
+        select m.*,
+      COALESCE(startb.one,0) as one,
+      COALESCE(startb.two,0) as two,
+      COALESCE(startb.three,0) as three,
+      COALESCE(startb.four,0) as four,
+      COALESCE(startb.five,0) as five from movie m
+      left JOIN (SELECT id,star,movie_id,
+               sum(case star when 1 then 1 else 0 end) as one,
+               sum(case star when 2 then 1 else 0 end) as two,
+               sum(case star when 3 then 1 else 0 end) as three,
+               sum(case star when 4 then 1 else 0 end) as four,
+               sum(case star when 5 then 1 else 0 end) as five
+              from score where movie_id = #{id})
+        as startb on startb.movie_id = m.id where m.id = #{id}
+    </sql>
 
     <sql id="movie_property">
         null,

@@ -1,6 +1,9 @@
 package com.douban.eggshell.mapper;
 
 import com.douban.eggshell.pojo.Movie;
+import com.douban.eggshell.pojo.Score;
+import com.douban.eggshell.pojo.TypeStyle;
+import com.douban.eggshell.vo.MovieVO;
 
 import java.util.List;
 import java.util.Map;
@@ -8,12 +11,12 @@ import java.util.Map;
 public interface MovieMapper {
 
     /**
-     * 获取默认排行榜（根据评分）
+     * 获取排行榜
      *
-     * @param row_num 行数，即获取前几条
+     * @param map 设置type值以获取分类排行榜
      * @return list
      */
-    List<Movie> rankingByGrade(int row_num);
+    List<Movie> rankingMovie(Map map);
 
     /**
      * 添加电影
@@ -26,12 +29,12 @@ public interface MovieMapper {
     /**
      * 通过id查找电影
      */
-    Movie findMovieById(int id);
+    MovieVO findMovieById(int id);
 
     /**
-     * 通过电影名和导演名找电影（查重）
+     * 通过电影名和导演名找电影（查重），或只通过电影名查找（搜索）
      */
-    Movie findMovieByNameDirector(Map map);
+    List<Movie> findMovieByNameDirector(Map map);
 
     /**
      * 更新评分数据
@@ -46,5 +49,20 @@ public interface MovieMapper {
      * @param map 包含id和新comment_num
      */
     int updateCommentNum(Map map);
+
+    /**
+     * 通过类型名查找以判断是否存在某类型
+     */
+    TypeStyle findStyleByName(String name);
+
+    /**
+     * 给电影增加评分
+     */
+    int addMovieScore(Score score);
+
+    /**
+     * 通过电影id获取最新的评分和评分人数数据
+     */
+    Map<String, Object> getScoreByMovieId(int id);
 
 }
