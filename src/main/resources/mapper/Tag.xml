@@ -29,21 +29,18 @@
                 and grade &gt;=#{start} and grade &lt;=#{end}
             </if>
 
+            <if test='sort=="H" '>
+                ORDER BY comment_num desc
+            </if>
 
+            <if test='sort=="G" '>
+                ORDER BY grade desc
+            </if>
 
-
+            <if test='sort=="T" '>
+                ORDER BY release_date desc
+            </if>
         </where>
-        <if test='sort=="H" '>
-             ORDER BY comment_num desc
-        </if>
-
-        <if test='sort=="G" '>
-             ORDER BY grade desc
-        </if>
-
-        <if test='sort=="T" '>
-             ORDER BY release_date desc
-        </if>
         <!--<choose>
             <when test="sort==G">
                 ORDER  BY  grade desc

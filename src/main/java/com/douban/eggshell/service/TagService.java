@@ -13,5 +13,5 @@ public interface TagService {
 
     List<TagGetMovieVo> findByType(String sort,String range,String tags);
 
-    boolean findStyleByName(String name );
+
 }

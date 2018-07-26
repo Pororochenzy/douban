@@ -211,9 +211,11 @@ public class ReviewController {
     @RequestMapping(value = "/latest", method = RequestMethod.GET)
     public Result review_latest(@RequestParam(value = "page", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
         //2. 根据start,size进行分页，并且可以设置id 倒排序PageHelper.startPage(start,size,"id asc");
+
         PageHelper.startPage(start, size);
 
         List<Film_review> lateReviews = reviewService.listReviewByWelcomeOrTime("latest");
+        log.info("lateReviews的值是{}",lateReviews);
 
         ReviewPageVO pageVO = PageVoUtil.getVoByResults(lateReviews);
 

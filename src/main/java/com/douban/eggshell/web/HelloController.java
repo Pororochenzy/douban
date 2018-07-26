@@ -1,6 +1,5 @@
 package com.douban.eggshell.web;
 
-import com.douban.eggshell.pojo.User;
 import com.douban.eggshell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

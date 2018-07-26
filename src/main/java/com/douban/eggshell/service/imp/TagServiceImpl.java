@@ -43,23 +43,15 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagGetMovieVo> findByType(String sort, String range, String tags) {
         Map<String, Object> map = new HashMap<>();
-
-        if (sort != null) {
-            //log.info("打印服务层sort的值：{}", sort);
-
-            if (sort.equals("G")) {
-                map.put("sort", "G");
-            }
-            if (sort.equals("T")) {
-                map.put("sort", "T");
-            }
-            if (sort.equals("H")) {
-                map.put("sort", "H");
-            }
-        } else {
-            log.info("服务层sort的值为空：{}", sort);
+        if (sort.equals("G")) {
+            map.put("sort", "G");
         }
-
+        if (sort.equals("T")) {
+            map.put("sort", "T");
+        }
+        if (sort.equals("H")) {
+            map.put("sort", "H");
+        }
         String[] rangeStr = range.split(",");
 
         int start = Integer.valueOf(rangeStr[0]);
@@ -68,8 +60,44 @@ public class TagServiceImpl implements TagService {
         map.put("start", start);
         map.put("end", end);
 
+        //电影类型 和电影地区
         // tags类型 第一种情况 style ， 第二种情况 area  ,顺序，先style ，后area
+        if (tags != null) {
 
+            if (tags.endsWith(",")) {
+                tags = tags.substring(0, tags.indexOf(","));
+                log.info("去除逗号后的tags{}", tags);
+            }
+
+            log.info("打印服务层的tags字符串:{}", tags);
+
+            if (tags.contains(",")) {
+                String[] tagStr = tags.split(",");
+                map.put("style", tagStr[0]);
+                map.put("area", tagStr[1]);
+
+                return tagMapper.findByType(map);
+            }
+            boolean flag = false;
+
+            Style obj = tagMapper.findStyleByName(tags);
+            if (obj != null) {
+                flag = true;
+            }
+            //如果flag为true的话，证明当前这个tag是个 类型(style),如果false的话 证明是地区
+            if (flag) {
+                //String style = tags;
+                map.put("style", tags);
+            } else {
+                // String area = tags;
+                map.put("area", tags);
+            }
+            return tagMapper.findByType(map);
+        }
+        return tagMapper.findByType(map);
+    }
+}
+/*
         if (tags != null) {
             if (tags.contains(",")) {
                 String[] tagStr = tags.split(",");
@@ -81,7 +109,11 @@ public class TagServiceImpl implements TagService {
                 map.put("area", area);
             } else {
                 //进了这里，证明tag 只有一个参数 ,所以要判断这个是类型 还是地区， 因为 顺序 有可能 相反
-                boolean flag = findStyleByName(tags);
+                boolean flag = false;
+                Style obj = tagMapper.findStyleByName(tags);
+                if (obj !=null) {
+                    flag=true;
+                }
                 //如果flag为true的话，证明当前这个tag是个 类型(style),如果false的话 证明是地区
                 if (flag) {
                     String style = tags;
@@ -94,17 +126,6 @@ public class TagServiceImpl implements TagService {
 
             }
         }
+*/
 
 
-        return tagMapper.findByType(map);
-    }
-
-    @Override
-    public boolean findStyleByName(String name) {
-        Style obj = tagMapper.findStyleByName(name);
-        if (obj !=null) {
-            return true;
-        }
-        return false;
-    }
-}
