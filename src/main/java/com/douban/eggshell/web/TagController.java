@@ -39,8 +39,7 @@ public class TagController {
     }
 
     /**
-     *  有bug
-     *  不能够正常 分页，它把全部结果都打印出来了
+     *
      * @param sort
      * @param range
      * @param tags
@@ -53,30 +52,22 @@ public class TagController {
                                 @RequestParam(value = "range", defaultValue = "0,10") String range,
                                 @RequestParam(value = "tags", required = false) String tags,
                                 @RequestParam(value = "page", defaultValue = "0") int start,
-                                @RequestParam(value = "size", defaultValue = "10") int size) {
+                                @RequestParam(value = "size", defaultValue = "30") int size) {
         if(tags.trim().equals("")){
             tags = null;
+            log.info("tags值是：",tags);
         }
 
         PageHelper.startPage(start, size);
-        
 
-       /* Map<String,Object> map  = new HashMap<>();
-        map.put("sore","T");
-        map.put("start",0);
-        map.put("end",10);
-        map.put("area","美国");
-
-        List<TagGetMovieVo> tagGetMovieVos = tagMapper.findByType(map);*/
         List<TagGetMovieVo> tagGetMovieVos = tagService.findByType(sort, range, tags);
+      log.info("tagGetMovieVos的值是：{}",tagGetMovieVos);
 
 
         if (tagGetMovieVos != null) {
 
             ReviewPageVO pageVO = PageVoUtil.getVoByResults(tagGetMovieVos);
 
-//            log.info("pageVO的值是{}",pageVO);
-//            log.info("pageVO的size是",pageVO.getTotal_page());
 
             if(pageVO.getSum()==0){
                 return Result.build(UserEnums.NO_FIND_RESULT);

@@ -73,27 +73,38 @@ public class TagServiceImpl implements TagService {
 
             if (tags.contains(",")) {
                 String[] tagStr = tags.split(",");
+                log.info("分割后的style:",tagStr[0]);
+                log.info("分割后的area:",tagStr[1]);
+
                 map.put("style", tagStr[0]);
                 map.put("area", tagStr[1]);
 
+                log.info("双参后的map是:{}",map);
                 return tagMapper.findByType(map);
             }
             boolean flag = false;
 
             Style obj = tagMapper.findStyleByName(tags);
+
+            log.info("查询Style对象obj:{}",obj);
+
             if (obj != null) {
                 flag = true;
             }
             //如果flag为true的话，证明当前这个tag是个 类型(style),如果false的话 证明是地区
             if (flag) {
                 //String style = tags;
+                log.info("此时单个参数的值是：{}",tags);
                 map.put("style", tags);
             } else {
                 // String area = tags;
+                log.info("此时单个参数的值是：{}",tags);
                 map.put("area", tags);
             }
+            log.info("单参后的map是:{}",map);
             return tagMapper.findByType(map);
         }
+        log.info("无参后的map是:{}",map);
         return tagMapper.findByType(map);
     }
 }

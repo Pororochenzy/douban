@@ -33,7 +33,7 @@ public class respondController {
     public Result respond_get(@RequestParam(value = "film_review_id") int fr_id,
                               @RequestParam(value = "page", defaultValue = "0") int start,
                               @RequestParam(value = "size", defaultValue = "5") int size) {
-        PageHelper.startPage(start, size,"createtime desc");
+        PageHelper.startPage(start, size,"res.createtime desc");
         List<RespVo> respVos = respondService.findResByReviewId(fr_id);
         if (respVos != null) {
             if (respVos.size() == 0) {

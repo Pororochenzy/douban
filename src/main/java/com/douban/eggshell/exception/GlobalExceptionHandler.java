@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public Result defaultErrorHandler(  HttpServletRequest req, Exception e)  {
              log.error("有异常出现: {}",e.getMessage());
+
         return Result.build(UserEnums.UNKNOW_ERROR);
     }
 
