@@ -9,6 +9,7 @@ import com.douban.eggshell.vo.MovieVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,8 +127,8 @@ public class MovieServiceImpl implements MovieService {
                 //评分增加成功，更新Movie表数据
                 Map<String, Object> scoreMap = movieMapper.getScoreByMovieId(score.getMovie_id());
                 if (scoreMap != null) {
-                    double grade = (double) scoreMap.get("grade");
-                    int comment_num = (int) scoreMap.get("comment_num");
+                    double grade = ((BigDecimal) scoreMap.get("grade")).doubleValue();
+                    int comment_num = (int) (long) scoreMap.get("comment_num");
                     grade = (double) Math.round(grade * 10) / 10;
                     return updateGrade(score.getMovie_id(), grade) &&
                             updateCommentNum(score.getMovie_id(), comment_num);
