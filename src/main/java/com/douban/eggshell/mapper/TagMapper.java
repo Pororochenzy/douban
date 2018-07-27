@@ -1,6 +1,7 @@
 package com.douban.eggshell.mapper;
 
 import com.douban.eggshell.pojo.Style;
+import com.douban.eggshell.pojo.StyleAndArea;
 import com.douban.eggshell.pojo.TypeArea;
 import com.douban.eggshell.pojo.TypeStyle;
 import com.douban.eggshell.vo.TagGetMovieVo;
@@ -13,7 +14,7 @@ public interface TagMapper {
 
     List<TypeStyle> listStyle();
 
-    List<TagGetMovieVo> findByType(Map map);
+    List<TagGetMovieVo> findByType(StyleAndArea styleAndArea);
 
     Style findStyleByName(String name);
 }

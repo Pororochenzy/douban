@@ -2,6 +2,7 @@ package com.douban.eggshell.service.imp;
 
 import com.douban.eggshell.mapper.TagMapper;
 import com.douban.eggshell.pojo.Style;
+import com.douban.eggshell.pojo.StyleAndArea;
 import com.douban.eggshell.pojo.TypeArea;
 import com.douban.eggshell.pojo.TypeStyle;
 import com.douban.eggshell.service.TagService;
@@ -42,23 +43,30 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public List<TagGetMovieVo> findByType(String sort, String range, String tags) {
-        Map<String, Object> map = new HashMap<>();
+//        Map<String, Object> map = new HashMap<>();
+        StyleAndArea  saa = new StyleAndArea();
+
         if (sort.equals("G")) {
-            map.put("sort", "G");
+//            map.put("sort", "G");
+            saa.setSort("G");
         }
         if (sort.equals("T")) {
-            map.put("sort", "T");
+//            map.put("sort", "T");
+            saa.setSort("T");
         }
         if (sort.equals("H")) {
-            map.put("sort", "H");
+//            map.put("sort", "H");
+            saa.setSort("H");
         }
         String[] rangeStr = range.split(",");
 
         int start = Integer.valueOf(rangeStr[0]);
         int end = Integer.valueOf(rangeStr[1]);
 
-        map.put("start", start);
-        map.put("end", end);
+//        map.put("start", start);
+//        map.put("end", end);
+            saa.setStart(start);
+            saa.setEnd(end);
 
         //电影类型 和电影地区
         // tags类型 第一种情况 style ， 第二种情况 area  ,顺序，先style ，后area
@@ -66,46 +74,53 @@ public class TagServiceImpl implements TagService {
 
             if (tags.endsWith(",")) {
                 tags = tags.substring(0, tags.indexOf(","));
-                log.info("去除逗号后的tags{}", tags);
+//                log.info("去除逗号后的tags{}", tags);
             }
 
-            log.info("打印服务层的tags字符串:{}", tags);
+//            log.info("打印服务层的tags字符串:{}", tags);
 
             if (tags.contains(",")) {
                 String[] tagStr = tags.split(",");
-                log.info("分割后的style:",tagStr[0]);
-                log.info("分割后的area:",tagStr[1]);
+//                log.info("分割后的style:",tagStr[0]);
+//                log.info("分割后的area:",tagStr[1]);
 
-                map.put("style", tagStr[0]);
-                map.put("area", tagStr[1]);
+//                map.put("style", tagStr[0]);
+//                map.put("area", tagStr[1]);
+                saa.setStyle(tagStr[0]);
+                saa.setArea(tagStr[1]);
 
-                log.info("双参后的map是:{}",map);
-                return tagMapper.findByType(map);
+//                log.info("双参后的map是:{}",map);
+                return tagMapper.findByType(saa);
             }
             boolean flag = false;
 
-            Style obj = tagMapper.findStyleByName(tags);
+    /*        Style obj = tagMapper.findStyleByName(tags);
 
             log.info("查询Style对象obj:{}",obj);
 
             if (obj != null) {
                 flag = true;
-            }
+            }*/
+String styleStr="剧情 喜剧动作 爱情 科幻 悬疑 惊悚 恐怖 犯罪 同性 音乐 歌舞 传记 历史 战争 西部 奇幻 冒险 灾难 武侠 情色";
+if(styleStr.indexOf(tags)==-1){//如果上面 style类型字符串 没有 该字符串,就证明该字符串是个area
+    flag=true;
+}
             //如果flag为true的话，证明当前这个tag是个 类型(style),如果false的话 证明是地区
             if (flag) {
-                //String style = tags;
-                log.info("此时单个参数的值是：{}",tags);
-                map.put("style", tags);
+//                map.put("area", tags);
+                saa.setArea(tags);
+
             } else {
-                // String area = tags;
-                log.info("此时单个参数的值是：{}",tags);
-                map.put("area", tags);
+//                map.put("style", tags);
+                saa.setStyle(tags);
+
+
             }
-            log.info("单参后的map是:{}",map);
-            return tagMapper.findByType(map);
+//            log.info("单参后的map是:{}",map);
+            return tagMapper.findByType(saa);
         }
-        log.info("无参后的map是:{}",map);
-        return tagMapper.findByType(map);
+//        log.info("无参后的map是:{}",map);
+        return tagMapper.findByType(saa);
     }
 }
 /*

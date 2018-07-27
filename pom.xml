@@ -96,6 +96,7 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
             <version>4.1.6</version>
+            <!--<version>5.0.0</version>-->
         </dependency>
 
     </dependencies>
@@ -109,8 +110,13 @@
                 <!--下面这个<configuration>不知道有没有必要-->
                 <configuration>
                     <fork>true</fork>
+
                 </configuration>
+                <!-- 配置分页插件 -->
+
+
             </plugin>
+
         </plugins>
     </build>
 

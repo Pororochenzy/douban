@@ -12,8 +12,8 @@
     </select>
 
     <!--根据标签模糊查找-->
-    <select id="findByType" parameterType="map" resultMap="movieTypeMap">
-        select m.id as m_id,m.name as m_name,m.imgurl as m_imgurl,m.grade as m_grade , m.comment_num as
+    <select id="findByType" parameterType="StyleAndArea" resultMap="movieTypeMap">
+        select *,m.id as m_id,m.name as m_name,m.imgurl as m_imgurl,m.grade as m_grade , m.comment_num as
         m_comment_numfrom FROM movie m
         <where>
 
@@ -29,29 +29,18 @@
                 and grade &gt;=#{start} and grade &lt;=#{end}
             </if>
 
-            <if test='sort=="H" '>
-                ORDER BY comment_num desc
-            </if>
-
-            <if test='sort=="G" '>
-                ORDER BY grade desc
-            </if>
-
-            <if test='sort=="T" '>
-                ORDER BY release_date desc
-            </if>
         </where>
-        <!--<choose>
-            <when test="sort==G">
-                ORDER  BY  grade desc
-            </when>
-            <when test="sort==T">
-                ORDER  BY  release_date desc
-            </when>
-            <otherwise>
-                ORDER  BY comment_num desc
-            </otherwise>
-        </choose>-->
+        <if test='sort=="H" '>
+            ORDER BY comment_num desc
+        </if>
+
+        <if test='sort=="G" '>
+            ORDER BY grade desc
+        </if>
+
+        <if test='sort=="T" '>
+            ORDER BY release_date desc
+        </if>
     </select>
 
     <resultMap id="movieTypeMap" type="com.douban.eggshell.vo.TagGetMovieVo">
@@ -60,7 +49,7 @@
         <result property="imgurl" column="m_imgurl"/>
         <result property="grade" column="m_grade"/>
     </resultMap>
-    
+
     <!--查是否存在此类型的电影-->
     <select id="findStyleByName" resultType="Style">
         select * from style where name =#{name}

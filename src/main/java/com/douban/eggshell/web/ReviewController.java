@@ -57,24 +57,20 @@ public class ReviewController {
      * @param request
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST)  //注意！！！ title 和comment 变量已经交换  comment  movie_id
+    @RequestMapping(method = RequestMethod.POST)
     public Result review_post(@RequestParam(value = "movie_id") int movie_id,
                               @RequestParam(value = "title") String title,
                               @RequestParam(value = "comment") String comment,
                               HttpServletRequest request) {
 
-        log.info("movie_id是:" + movie_id);
-        log.info("title是:" + title);
 
         if (!SessionUtil.isLogin(request)) {
             return Result.build(UserEnums.USER_NOT_LOGIN);
         }
         User currenuser = SessionUtil.getUser(request);
-        log.info("session里的id,email,pwd是:{}", currenuser);
-        //userinfo ID 正常来说是14 才对  但是出现了17 。
+//        log.info("session里的id,email,pwd是:{}", currenuser);
         //通过user表的id  查找 user_info表
         UserInfo userInfo = userInfoService.findByUser(currenuser);
-        log.info("打印userinfo值：{}", userInfo);
         int ui_id = userInfo.getId();
 
         boolean flag = reviewService.addReview(title, comment, ui_id, movie_id);
@@ -83,21 +79,6 @@ public class ReviewController {
         }
         return Result.build(UserEnums.REVIEW_ADD_ERROR);
 
-//        User currenuser = SessionUtil.getUser(request);
-//        log.info("userinfo的id是:", currenuser.getId());
-//        if (currenuser != null) {
-//            int userinfo_id = userInfoService.findByUser(currenuser).getId();
-//
-//
-//            boolean flag = reviewService.addReview(title, comment, userinfo_id, movie_id);
-//            if (flag) {
-//                return Result.build(UserEnums.REVIEW_ADD_SUCCESS);
-//            } else {
-//                return Result.build(UserEnums.REVIEW_ADD_ERROR);
-//            }
-//        } else {
-//            return Result.build(UserEnums.USER_NOT_LOGIN);
-//        }
 
     }
 
@@ -136,7 +117,6 @@ public class ReviewController {
      */
     @RequestMapping(value = "/support", method = RequestMethod.PUT)
     public Result support(@RequestParam(value = "film_review_id") int film_review_id, HttpServletRequest request) {
-        log.info("传入的值参数是：{}", film_review_id);
         //取消 登录才能点赞, SessionUtil.isLogin（）用户登录了后返回true,未登录返回false
 
 //        if (SessionUtil.isLogin(request) == false) {

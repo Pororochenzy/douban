@@ -50,13 +50,10 @@ public class TagController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public Result getMovieByTag(@RequestParam(value = "sort", defaultValue = "H") String sort,
                                 @RequestParam(value = "range", defaultValue = "0,10") String range,
-                                @RequestParam(value = "tags", required = false) String tags,
+                                @RequestParam(value = "tags", defaultValue = "") String tags,
                                 @RequestParam(value = "page", defaultValue = "0") int start,
                                 @RequestParam(value = "size", defaultValue = "30") int size) {
-        if(tags.trim().equals("")){
-            tags = null;
-            log.info("tags值是：",tags);
-        }
+
 
         PageHelper.startPage(start, size);
 
