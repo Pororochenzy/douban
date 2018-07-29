@@ -190,7 +190,8 @@ public class IdentityController {
                 //根据时间戳创建新的文件名，这样即便是第二次上传相同名称的文件，也不会把第一次的文件覆盖了
                 String fileName = System.currentTimeMillis() + avater.getOriginalFilename();
                 //通过req.getServletContext().getRealPath("") 获取当前项目的真实路径，然后拼接前面的文件名
-                String destFileName = request.getServletContext().getRealPath("") + "uploaded" + File.separator + fileName;
+                //String destFileName = request.getServletContext().getRealPath("") + "uploaded" + File.separator + fileName;
+                String destFileName = request.getServletContext().getRealPath("")+File.separator+ "uploaded" + File.separator + fileName;//linux需要多加个划线
                 //第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录
                 File destFile = new File(destFileName);
                 if(!destFile.getParentFile().exists()){

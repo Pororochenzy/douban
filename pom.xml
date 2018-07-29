@@ -6,7 +6,7 @@
     <groupId>com.douban</groupId>
     <artifactId>eggshell</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>eggshell</name>
     <description>Demo project for Spring Boot</description>
@@ -14,7 +14,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.3.RELEASE</version>
+        <!--<version>2.0.3.RELEASE</version>-->
+        <version>1.5.9.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -22,6 +23,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+<!--跳过测试-->
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
@@ -30,6 +33,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--为了打包成war包 而新增的-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -81,15 +90,16 @@
         <!--</dependency>-->
 
         <!--shiro 权限加密-->
-        <dependency>
+      <!--  <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
             <version>1.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-        </dependency>
+        </dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.junit.jupiter</groupId>-->
+            <!--<artifactId>junit-jupiter-api</artifactId>-->
+        <!--</dependency>-->
 
         <!-- pagehelper -->
         <dependency>

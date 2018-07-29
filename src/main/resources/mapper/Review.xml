@@ -26,7 +26,11 @@ m.style as m_style,m.area as m_area,m.release_date as m_release_date,  ui.id as 
         left JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
         left JOIN (select film_review_id ,count(*) as respond_num from respond GROUP BY film_review_id) as numtable on
         numtable.film_review_id = fr.id
-        left JOIN (select star,user_info_id,movie_id from score) as score on score.user_info_id = fr.id and  s.movie_id = m.id
+
+
+        inner JOIN (select star,user_info_id,movie_id from score) as score on score.user_info_id = ui.id and
+        score.movie_id = m.id
+
         where fr.isdelete =0 and  fr.id=#{id}
     </select>
 
@@ -119,11 +123,11 @@ INSERT INTO film_review(title,comment,user_info_id,movie_id,createtime) VALUES(#
         from film_review fr
         INNER JOIN movie m on fr.movie_id=m.id
         INNER JOIN user_info ui on fr.user_info_id=ui.id
-        left JOIN score s on s.movie_id=m.id and s.user_info_id=ui.id
+
         left JOIN (select film_review_id ,count(*) as respond_num from respond GROUP BY film_review_id) as numtable on
         numtable.film_review_id = fr.id
-        left JOIN (select star,user_info_id,movie_id from score) as score on score.user_info_id = fr.id and
-        s.movie_id = m.id
+        inner JOIN (select star,user_info_id,movie_id from score) as score on score.user_info_id = ui.id and
+        score.movie_id = m.id
         where fr.isdelete =0
 
         <choose>

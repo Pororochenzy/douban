@@ -4,7 +4,6 @@ import com.douban.eggshell.mapper.RespondMapper;
 import com.douban.eggshell.service.RespondService;
 import com.douban.eggshell.util.DateUtil;
 import com.douban.eggshell.vo.respond.RespVo;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

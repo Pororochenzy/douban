@@ -1,3 +1,4 @@
+/*
 package com.douban.eggshell.mapper;
 
 import com.douban.eggshell.EggshellApplication;
@@ -91,4 +92,4 @@ public class MovieMapperTest {
 //
 //        }
     }
-}
+}*/
